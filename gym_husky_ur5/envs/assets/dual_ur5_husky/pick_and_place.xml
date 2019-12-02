@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco>
+	<compiler angle="radian" coordinate="local" meshdir="../stls/dual_ur5_husky" texturedir="../textures"></compiler>
+	<!-- <option timestep="0.002" gravity="0 0 -9.81" cone="elliptic"  >
+		<flag warmstart="enable"></flag>
+	</option> -->
+	<!-- The choice between pyramidal and elliptic friction cones is a modeling choice rather than an algorithmic choice, i.e. it leads to a different optimization problem solved with the same algorithms. Elliptic cones correspond more closely to physical reality. However pyramidal cones can improve the performance of the algorithms - but not necessarily. While the default is pyramidal, we recommend trying the elliptic cones. When contact slip is a problem, the best way to suppress it is to use elliptic cones, large impratio, and the Newton algorithm with very small tolerance. If that is not sufficient, enable the Noslip solver. 
+	http://mujoco.org/book/modeling.html#CAlgorithms -->
+	<option timestep="2e-3"
+			iterations="10"
+			tolerance="1e-10"
+			impratio="300"
+			gravity="0 0 -9.81"
+			solver="PGS"
+			cone="elliptic" />
+
+	<size njmax="600" nconmax="150" nstack="300000"/>
+
+	<include file="shared.xml"></include>
+    <visual>
+        <map fogstart="3" fogend="5" force="0.1" znear="0.1"/>
+        <quality shadowsize="2048" offsamples="8"/>
+        <global offwidth="800" offheight="800"/>
+    </visual>
+	<worldbody>
+		<geom name="floor0" pos="0.8 0.75 0" size="1.85 1.7 1.5" type="plane" condim="3" material="floor_mat"></geom>
+		<body name="floor0" pos="0.8 0.75 0">
+			<site name="target0" pos="0 0 0.5" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+		</body>
+
+		<!-- <include file="robot.xml"></include> -->
+		<include file="robot_husky.xml"></include>
+		<!-- <include file="robotiq_gripper_s.xml"></include> -->
+
+		<!-- Object -->
+		<!-- <include file="../objects/can.xml"></include> -->
+
+		<body pos="0.9 -0.6 0.15" name="table0">
+			<geom size="0.25 0.5 0.15" type="box" mass="2000" material="table_mat"></geom>
+			<geom size="0.25 0.5 0.15" type="box" mass="2000" group="1" material="table_mat"></geom>
+		</body>
+
+		<!-- <light directional="false" cutoff="35" exponent="10" diffuse=".7 .7 .7" pos="0.4 -0.2 1.5" dir="-0.4 0.2 -1.5" specular=".3 .3 .3"/> -->
+		<camera name="fixed" pos="0 -0.7 0.7" zaxis="0 -1 1" fovy="45" ipd="0.068"/>
+
+		<!-- <body name="object1" pos="1.8 -0.35 0.44">
+			<joint name="object1:joint" type="free" damping="0.01"></joint>
+			<geom size="0.04 0.04 0.04" type="box" condim="3" name="object0_visual1" material="block_mat" mass="2" group="1"></geom>
+			<geom size="0.04 0.04 0.04" type="box" condim="3" name="object0_collision1" material="block_mat" mass="2" group="0"></geom>
+
+			<site name="object1" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+		</body> -->
+		
+		<!-- <body name="object0" pos="0.025 0.025 0.025">
+			<joint name="object0:joint" type="free" damping="0.01"></joint>
+			<body name="collision">
+			<geom pos="0 0 0" mesh="can_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="coke" group="1" condim="4"/>
+			</body>
+			<body name="visual">
+			<geom pos="0 0 0" mesh="can_mesh" type="mesh" material="coke"  conaffinity="0" contype="0" group="0" mass="0.0001"/>
+			<geom pos="0 0 0" mesh="can_mesh" type="mesh" material="coke"  conaffinity="0" contype="0" group="1" mass="0.0001"/>
+			</body>
+			<site rgba="0 0 0 0" size="0.005" pos="0 0 -0.06" name="bottom_site"/>
+			<site rgba="0 0 0 0" size="0.005" pos="0 0 0.04" name="top_site"/>
+			<site rgba="0 0 0 0" size="0.005" pos="0.025 0.025 0" name="horizontal_radius_site"/>
+			<site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+		</body> -->
+		<body name="object0" pos="0.025 0.025 0.025">
+			<joint name="object0:joint" type="free" damping="0.01"></joint>
+			<geom size="0.05 0.05 0.05" type="box" contype='1' conaffinity='1' margin='0.001' solimp='0.99 0.99 0.01' solref='0.01 1' condim="4" name="object0_visual" material="block_mat" mass="2" group="1" friction="1 .001 .001" ></geom>
+			<geom size="0.05 0.05 0.05" type="box" contype='1' conaffinity='1' margin='0.001' solimp='0.99 0.99 0.01' solref='0.01 1' condim="4" name="object0_collision" material="block_mat" mass="2" group="0" friction="1 .001 .001" ></geom>
+
+			<site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+		</body>
+
+		<!-- <body name="object0" pos="0.025 0.025 0.025">
+			<joint name="object0:joint" type="free" damping="0.01"></joint>
+			<geom size="0.05 0.05 0.05" type="sphere" condim="4" name="object0_visual" material="block_mat" mass="2" group="1" friction="1 .001 .001" ></geom>
+			<geom size="0.05 0.05 0.05" type="sphere" condim="4" name="object0_collision" material="block_mat" mass="2" group="0" friction="1 .001 .001" ></geom>
+
+			<site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+		</body> -->
+
+		<!-- <body name="object0" pos="0.025 0.025 0.025">
+			<joint name="object0:joint" type="free" damping="0.01"></joint>
+			<geom size="0.05 0.07" type="cylinder" condim="4" name="object0_visual" material="coke" mass="4" group="1" friction="1 .001 .001" ></geom>
+			<geom size="0.05 0.07" type="cylinder" condim="4" name="object0_collision" material="coke" mass="4" group="0" friction="1 .001 .001" ></geom>
+
+			<site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+		</body> -->
+
+		<light directional="true" ambient="0.2 0.2 0.2" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" castshadow="false" pos="0 0 4" dir="0 0 -1" name="light0"></light>
+	</worldbody>
+
+	<!-- <include file="actuator.xml"></include> -->
+	<include file="gripper.xml"></include>
+	<!-- <include file="robotiq_gripper_s_shared.xml"></include> -->
+
+</mujoco>

@@ -1,0 +1,202 @@
+<mujoco>
+    <asset>
+        <texture builtin="gradient" height="256" rgb1=".9 .9 1." rgb2=".2 .3 .4" type="skybox" width="256"/>
+        <texture builtin="checker" height="512" name="texplane" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" type="2d" width="512"/>
+        <material name="floorplane" reflectance="0.5" texrepeat="1 1" texture="texplane" texuniform="true"/>
+        
+        <!-- <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/> -->
+        <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>
+        <!-- <texture builtin="checker" height="100" name="texplane" rgb1="0 0 0" rgb2="0.8 0.8 0.8" type="2d" width="100"/> -->
+        <texture type="skybox" builtin="gradient" rgb1="0.44 0.85 0.56" rgb2="0.46 0.87 0.58" width="32" height="32"></texture>
+        <texture name="texture_block" file="block.png" gridsize="3 4" gridlayout=".U..LFRB.D.."></texture>
+
+        <material name="floor_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="table_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.93 0.93 0.93 1"></material>
+        <material name="block_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="puck_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="MatPlane" reflectance="0.5" shininess="1" specular="1" texrepeat="60 60" texture="texplane"/>
+        <material name="geom" texture="texgeom" texuniform="true"/>
+        <material name="robot0:geomMat" shininess="0.03" specular="0.4"></material>
+
+        <mesh name="base_link" file="base_link.stl" />
+        <mesh name="wheel" file="wheel.stl" />
+        <mesh name="top_chassis" file="top_chassis.stl" />
+        <mesh name="bumper" file="bumper.stl" />
+        <mesh name="dual_arm_bulkhead" file="dual_arm_bulkhead.stl" />
+        <mesh name="flir-ptu-simple" file="flir-ptu-simple.stl" />
+        <mesh name="base" file="base.stl" />
+        <mesh name="shoulder" file="shoulder.stl" />
+        <mesh name="upperarm" file="upperarm.stl" />
+        <mesh name="forearm" file="forearm.stl" />
+        <mesh name="wrist1" file="wrist1.stl" />
+        <mesh name="wrist2" file="wrist2.stl" />
+        <mesh name="wrist3" file="wrist3.stl" />
+        <mesh name="sick-lms1xx" file="sick-lms1xx.stl" />
+        <mesh name="pointgrey_bumblebee2" file="pointgrey_bumblebee2.stl" />
+        <mesh name="robotiq_fts300" file="robotiq_fts300.stl" />
+        <mesh name="link_0" file="link_0.STL" />
+        <mesh name="link_1" file="link_1.STL" />
+        <mesh name="link_2" file="link_2.STL" />
+        <mesh name="link_3" file="link_3.STL" />
+        <mesh name="palm" file="palm.STL" />
+        <!-- from Standford robosuite -->
+        <mesh name="collision_link_0" file="collision_link_0.STL" />
+        <mesh name="collision_link_1" file="collision_link_1.STL" />
+        <mesh name="collision_link_2" file="collision_link_2.STL" />
+        <mesh name="collision_link_3" file="collision_link_3.STL" />
+        <mesh name="collision_palm" file="collision_palm.STL" />
+
+    </asset>
+    <asset>
+        <mesh file="bottle.stl" name="bottle_mesh"  scale="2.0 2.0 2.0"/>
+        <texture type="skybox" file="glass.png" name="tex-glass"/>
+        <material name="glass" reflectance="0.5" texrepeat="5 5" texture="tex-glass" texuniform="true"/>
+    </asset>
+    <asset>
+        <mesh file="can.stl" name="can_mesh" scale="2.0 2.0 2.0" />
+        <texture file="can.png" name="tex-can"/>
+        <material name="coke" reflectance="0.7" texrepeat="5 5" texture="tex-can" texuniform="true"/>
+    </asset>
+    <asset>
+        <mesh file="milk.stl" name="milk_mesh" scale="2.0 2.0 2.0"/>
+        <texture file="ceramic.png" name="tex-ceramic"/>
+        <material name="ceramic" reflectance="0.5" texrepeat="1 1" texture="tex-ceramic" texuniform="true"/>
+    </asset>
+    <equality>
+        <!-- <weld body1="gripper_l:mocap" body2="l_gripper_palm_link" solimp="0.9 0.95 0.001" solref="0.02 1"></weld> -->
+        <weld body2="gripper_r:mocap" body1="r_gripper_palm_link" solimp="0.9 0.95 0.001" solref="0.02 1"></weld>
+    </equality>
+
+    <contact>
+        <!-- <exclude body1="robot0:r_gripper_finger_link" body2="robot0:l_gripper_finger_link"></exclude> -->
+        <!-- <exclude body1="robot0:torso_lift_link" body2="robot0:torso_fixed_link"></exclude> -->
+        <!-- <exclude body1="robot0:torso_lift_link" body2="robot0:shoulder_pan_link"></exclude> -->
+        <exclude body1="robot0:base_link" body2="r_ur5_arm_shoulder_link" ></exclude>
+        <exclude body1="r_ur5_arm_shoulder_link" body2="r_ur5_arm_upper_arm_link" ></exclude>
+        <!-- <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude>
+        <exclude body1="" body2="" ></exclude> -->
+
+        <!-- left gripper  -->
+        <!-- https://github.com/StanfordVL/robosuite/blob/7b727b075607466662ba8fac8bf8634936bdc58d/robosuite/models/assets/grippers/robotiq_gripper_s.xml#L111 -->
+        <!-- <exclude body1="l_finger_1_link_1" body2="l_gripper_palm_link"/>
+        <exclude body1="l_finger_2_link_1" body2="l_gripper_palm_link"/>
+        <exclude body1="l_finger_middle_link_1" body2="l_gripper_palm_link"/>
+        <exclude body1="l_finger_1_link_0" body2="l_gripper_palm_link"/>
+        <exclude body1="l_finger_2_link_0" body2="l_gripper_palm_link"/>
+        <exclude body1="l_finger_middle_link_0" body2="l_gripper_palm_link"/>
+        <exclude body1="l_finger_1_link_0" body2="l_finger_1_link_1"/>
+        <exclude body1="l_finger_2_link_0" body2="l_finger_2_link_1"/>
+        <exclude body1="l_finger_middle_link_0" body2="l_finger_middle_link_1"/> -->
+        <!-- right gripper -->
+        <exclude body1="r_finger_1_link_1" body2="r_gripper_palm_link"/>
+        <exclude body1="r_finger_2_link_1" body2="r_gripper_palm_link"/>
+        <exclude body1="r_finger_middle_link_1" body2="r_gripper_palm_link"/>
+        <exclude body1="r_finger_1_link_0" body2="r_gripper_palm_link"/>
+        <exclude body1="r_finger_2_link_0" body2="r_gripper_palm_link"/>
+        <exclude body1="r_finger_middle_link_0" body2="r_gripper_palm_link"/>
+        <exclude body1="r_finger_1_link_0" body2="r_finger_1_link_1"/>
+        <exclude body1="r_finger_2_link_0" body2="r_finger_2_link_1"/>
+        <exclude body1="r_finger_middle_link_0" body2="r_finger_middle_link_1"/>
+
+    </contact>
+
+    <default>
+        <!-- all geom params -->
+        <geom contype='1' conaffinity='1' margin="0.001" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" /> 
+        <!-- friction="1. 0.1 0.1" /> -->
+        <joint armature="0.01" damping=".1"/>
+        <default class="UR5">
+            <joint damping='65'/>
+        </default>
+        <default class="UR5e">
+            <joint damping='45'/>
+        </default>
+        <default class="GRIPPER">
+            <joint damping='5'/>
+            <geom rgba="0.424 0.424 0.424 1.0" contype='1' conaffinity='1' margin="0.001" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" type='mesh'/>
+            
+        </default>
+
+        <default class="dual_ur5_husky">
+            <!-- <geom margin="0.001" solimp="0.99 0.99 0.01" solref="0.01 1" condim="4" user="0"></geom> -->
+            <!-- <joint armature="1" damping="50" frictionloss="0" stiffness="0"></joint> -->
+            
+            <default class="robot0:Gripper">
+                <!-- <geom condim="4" margin="0.001" type="box" user="0" rgba="0.356 0.361 0.376 1.0"></geom> -->
+                <!-- <joint armature="100" damping="1000" limited="true" solimplimit="0.99 0.999 0.01" solreflimit="0.01 1" type="slide"></joint> -->
+            </default>
+
+            <!-- Default Joint -->
+            <!-- <default class="gripper:joint">
+                <joint armature="100" damping="1000" limited="true" solimplimit="0.99 0.999 0.01" solreflimit="0.01 1" type="slide"></joint>
+            </default> -->
+            <default class="ur5:joint">
+                <!-- <joint armature="1" damping="5" frictionloss="0" stiffness="0"></joint> -->
+            </default>
+
+            <!-- Default Colours -->
+
+            <default class="ur5:blue">
+                <geom rgba="0.635 0.784 0.910 1.0"></geom>
+                <!-- <joint armature="1" damping="5" frictionloss="0" stiffness="0"></joint> -->
+            </default>
+            <default class="ur5:grey">
+                <geom rgba="0.365 0.365 0.365 1.0"></geom>
+            </default>
+            <default class="ur5:black">
+                <geom rgba="0.106 0.106 0.106 1.0"></geom>
+            </default>
+            <default class="husky:orange">
+                <geom rgba="0.996 0.941 0.412 1.0"></geom>
+            </default>
+            <default class="husky:black">
+                <geom rgba="0.192 0.192 0.192 1.0"></geom>
+            </default>
+            <default class="gripper:black">
+                <geom rgba="0.424 0.424 0.424 1.0"></geom>
+                <!-- <joint damping="50"></joint> -->
+                <!-- <geom condim="4" margin="0.001" type="box" user="0" rgba="0.356 0.361 0.376 1.0"></geom> -->
+                <!-- <geom contype='1' conaffinity='1' margin='0.001' solimp='0.99 0.99 0.01' solref='0.01 1' condim='4' /> -->
+                <!-- <joint armature="1" damping="1" limited="true" solimplimit="0.99 0.999 0.01" solreflimit="0.01 1"></joint> -->
+            </default>
+            <default class="gripper:white">
+                <!-- <geom rgba="0.898 0.898 0.898 1.0"></geom> -->
+                <geom rgba="0.898 0.898 0.898 1.0" contype='1' conaffinity='1' margin='0.001' solimp='0.99 0.99 0.01' solref='0.01 1' condim='4' type='mesh'/>
+                <!-- <joint damping="50"></joint> -->
+                <!-- <geom condim="4" margin="0.001" type="box" user="0" rgba="0.356 0.361 0.376 1.0"></geom> -->
+                <!-- <joint armature="1" damping="1" limited="true" solimplimit="0.99 0.999 0.01" solreflimit="0.01 1"></joint> -->
+            </default>
+            <default class="bb2_camera">
+                <geom rgba="0.776 0.624 0.294 1.0"></geom>
+            </default>
+            <default class="wheel">
+                <geom rgba="0.231 0.231 0.231 1.0"></geom>
+            </default>
+            <default class="sick_lidar">
+                <geom rgba="0.761 0.714 0.576 1.0"></geom>
+            </default>
+        </default>
+    </default>
+
+</mujoco>

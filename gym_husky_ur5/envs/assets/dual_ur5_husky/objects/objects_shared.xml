@@ -1,0 +1,17 @@
+<mujoco>
+  <asset>
+    <mesh file="bottle.stl" name="bottle_mesh"/>
+    <texture type="skybox" file="glass.png" name="tex-glass"/>
+    <material name="glass" reflectance="0.5" texrepeat="5 5" texture="tex-glass" texuniform="true"/>
+  </asset>
+  <asset>
+    <mesh file="can.stl" name="can_mesh"/>
+    <texture file="can.png" name="tex-can"/>
+    <material name="coke" reflectance="0.7" texrepeat="5 5" texture="tex-can" texuniform="true"/>
+  </asset>
+  <asset>
+    <mesh file="milk.stl" name="milk_mesh" scale="0.9 0.9 0.9"/>
+    <texture file="ceramic.png" name="tex-ceramic"/>
+    <material name="ceramic" reflectance="0.5" texrepeat="1 1" texture="tex-ceramic" texuniform="true"/>
+  </asset>
+</mujoco>

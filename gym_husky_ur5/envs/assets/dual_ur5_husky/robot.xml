@@ -1,0 +1,646 @@
+<mujoco>
+
+	<body mocap="true" name="robot0:mocap" pos="0 0 0">
+		<geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.7" size="0.005 0.005 0.005" type="box"></geom>
+		<geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="1 0.005 0.005" type="box"></geom>
+		<geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 1 0.001" type="box"></geom>
+		<geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 0.005 1" type="box"></geom>
+	</body>
+
+    <body name="robot0:base_link" pos="0 0 0.061875">
+        <!-- <geom mesh="base_link" name="robot0:base_link" material="robot0:base_mat" class="robot0:grey"></geom> -->
+        <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="base_link" />
+        <geom size="0.4937 0.28545 0.061875" pos="0 0 0.061875" type="box" />
+
+		<joint armature="0.0001" axis="1 0 0" damping="1e+11" name="robot0:slide0" pos="0 0 0" type="slide"></joint>
+		<joint armature="0.0001" axis="0 1 0" damping="1e+11" name="robot0:slide1" pos="0 0 0" type="slide"></joint>
+		<joint armature="0.0001" axis="0 0 1" damping="1e+11" name="robot0:slide2" pos="0 0 0" type="slide"></joint>
+		<inertial diaginertia="1.2869 1.2236 0.9868" mass="70.1294" pos="-0.0036 0 0.0014" quat="0.7605 -0.0133 -0.0061 0.6491"></inertial>
+		<!-- control the base in x-y-z slide -->
+		<joint name="base_x_slide_joint" type="slide" pos="0 0 0" axis="1 0 0" limited="true" range="0 0.2" />
+		<!-- <joint name="base_y_slide_joint" type="slide" pos="0 0 0 " axis="0 1 0" limited="true" range="0 0.2" /> -->
+		<!-- <joint name="base_z_slide_joint" type="slide" pos="0 0 0 " axis="0 0 1" limited="true" range="0 0.2" /> -->
+		<joint name="base_z_hinge_joint" type="hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-0.57 0.57" />
+		<!-- <joint name="base_y_hinge_joint" type="hinge" pos="0 0 0" axis="0 1 0" limited="true" range="-1.57 1.57" /> -->
+		<!-- <joint name="base_x_hinge_joint" type="hinge" pos="0 0 0" axis="1 0 0" limited="true" range="-1.57 1.57" /> -->
+
+        <body name="r_ur5_arm_shoulder_link" pos="0.12505 -0.21302 0.42307" quat="0.653595 0.27036 0.270576 -0.653075">
+            <inertial pos="0 0 0" mass="3.7" diaginertia="0.0102675 0.0102675 0.00666" />
+            <joint name="r_ur5_arm_shoulder_pan_joint" pos="0 0 0" axis="0 0 1" limited="true" range="-3.14159 3.14159" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="shoulder" />
+            <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="shoulder" />
+            <body name="r_ur5_arm_upper_arm_link" pos="0 0.13585 0" quat="0.707107 0 0.707107 0">
+                <inertial pos="0 0 0.28" mass="8.393" diaginertia="0.226891 0.226891 0.0151074" />
+                <joint name="r_ur5_arm_shoulder_lift_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="upperarm" />
+                <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="upperarm" />
+                <body name="r_ur5_arm_forearm_link" pos="0 -0.1197 0.425">
+                    <inertial pos="0 0 0.25" mass="2.275" diaginertia="0.0494433 0.0494433 0.004095" />
+                    <joint name="r_ur5_arm_elbow_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="forearm" />
+                    <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="forearm" />
+                    <body name="r_ur5_arm_wrist_1_link" pos="0 0 0.39225" quat="0.707107 0 0.707107 0">
+                        <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="1.219" diaginertia="0.21942 0.111173 0.111173" />
+                        <joint name="r_ur5_arm_wrist_1_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                        <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="wrist1" />
+                        <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="wrist1" />
+                        <body name="r_ur5_arm_wrist_2_link" pos="0 0.093 0">
+                            <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="1.219" diaginertia="0.21942 0.111173 0.111173" />
+                            <joint name="r_ur5_arm_wrist_2_joint" pos="0 0 0" axis="0 0 1" limited="true" range="-3.14159 3.14159" />
+                            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="wrist2" />
+                            <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="wrist2" />
+                            <body name="r_ur5_arm_wrist_3_link" pos="0 0 0.09465">
+                                <inertial pos="1.10016e-10 0.136364 4.88137e-05" quat="0.499969 0.500031 -0.500031 0.499969" mass="2.1389" diaginertia="0.0441119 0.0274263 0.0218065" />
+                                <joint name="r_ur5_arm_wrist_3_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="wrist3" />
+                                <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="wrist3" />
+                                <geom size="0.005 0.005 0.005" pos="-1.7949e-11 0.0723 0" quat="0.707107 0 0 0.707107" type="box" />
+                                <geom pos="0 0.0823 0" quat="0.500199 -0.499801 0.499801 0.500199" type="mesh" contype="0" conaffinity="0" group="1" mesh="robotiq_fts300" />
+                                <geom pos="0 0.0823 0" quat="0.500199 -0.499801 0.499801 0.500199" type="mesh" mesh="robotiq_fts300" />
+                                
+                                <body name="robot0:gripper_link" pos="1.64197e-10 0.17378 7.2848e-05" quat="-0.382132 8.29339e-10 0.924108 0.000735892">
+                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="palm" />
+                                    <geom size="0.05 0.05 0.05" type="box" rgba="0 1 0 1" />
+                                    <site name="robot0:grip" rgba="0 0 0 0" size="0.02 0.02 0.02"></site>
+                                </body>
+
+                                <body name="r_finger_1_link_0" pos="0.00679839 0.195255 -0.0575191" quat="-0.653702 -0.270618 -0.269798 -0.653184">
+                                    <inertial pos="-0.01 0 0" quat="0.5 0.5 0.5 0.5" mass="0.1" diaginertia="2.5e-05 2.5e-05 1.8e-05" />
+                                    <joint name="r_palm_finger_1_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-0.2967 0.2967" damping="1" />
+                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_0" />
+                                    <geom type="mesh" rgba="0 1 0 1" mesh="link_0" />
+                                    <body name="r_finger_1_link_proximal_actuating_hinge" pos="0 0 0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0012 -0.00162 -0.00161" quat="0.0435928 0.666697 -0.165138 0.725496" mass="0.02647" diaginertia="3.27095e-06 2.25409e-06 1.48186e-06" />
+                                        <joint name="r_finger_1_joint_proximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" />
+                                        <body name="r_finger_1_link_proximal_actuating_bar" pos="0.02858 0 0" quat="0.597192 0 0 0.802098">
+                                            <inertial pos="0.02699 -0.00122 0" quat="0.492947 0.491625 0.50833 0.506862" mass="0.00659" diaginertia="7.19743e-06 7.18272e-06 7.68055e-08" />
+                                            <joint name="r_finger_1_joint_proximal_actuating_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="r_finger_1_link_paraproximal_actuating_hinge" pos="0 0 -0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0064 0 0" quat="0 0.707107 0 0.707107" mass="0.00362" diaginertia="6.5322e-07 5.3588e-07 1.2043e-07" />
+                                        <joint name="r_finger_1_joint_paraproximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" />
+                                        <body name="r_finger_1_link_paraproximal_bar" pos="0.02286 0 0" quat="0.707388 0 0 0.706825">
+                                            <inertial pos="0.02858 -0.00129 0" quat="0.492978 0.491357 0.508576 0.506844" mass="0.00732" diaginertia="8.78875e-06 8.77558e-06 8.22394e-08" />
+                                            <joint name="r_finger_1_joint_paraproximal_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="r_finger_1_link_1" pos="0 0 0" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.00053 0.03218 0" quat="0.00544471 0.00542787 0.707078 0.707093" mass="0.047" diaginertia="6.43594e-05 6.06192e-05 4.97928e-06" />
+                                        <joint name="r_finger_1_joint_1" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.2217" damping="1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_1" />
+                                        <body name="r_finger_1_link_median_actuating_hinge" pos="0 0.05715 0.01" quat="0.982936 0 0 -0.183947">
+                                            <inertial pos="0.0092 0.00514 0" quat="0.195177 0.679637 -0.195177 0.679637" mass="0.00359" diaginertia="7.1813e-07 6.24661e-07 9.94992e-08" />
+                                            <joint name="r_finger_1_joint_median_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="r_finger_1_link_median_bar" pos="0.01625 0.01516 0" quat="0.398652 0 0 0.917102">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.491476 0.48998 0.509977 0.508226" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="r_finger_1_joint_median_actuating_hinge_median_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="r_finger_1_link_paramedian_hinge" pos="0 0.05715 -0.01">
+                                            <inertial pos="-0.01025 0.00046 0" quat="-0.0114321 0.707014 0.0114321 0.707014" mass="0.00276" diaginertia="5.4007e-07 5.03062e-07 4.16477e-08" />
+                                            <joint name="r_finger_1_joint_paramedian_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="r_finger_1_link_median_bar_underactuated" pos="0.01227 0.00329 0" quat="0.707105 0 0 0.707108">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.48998 0.491476 0.508226 0.509977" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="r_finger_1_joint_paramedian_hinge_median_bar_underactuated" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="r_finger_1_link_2" pos="0 0.05715 0">
+                                            <inertial pos="0.00048 0.02167 0.00018" quat="0.00523005 0.00665272 0.709882 0.70427" mass="0.03284" diaginertia="2.24866e-05 1.98645e-05 3.47368e-06" />
+                                            <joint name="r_finger_1_joint_2" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.5708" damping="1" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_2" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_2" />
+                                            <body name="r_finger_1_link_paradistal_hinge" pos="0 0.039 -0.01">
+                                                <inertial pos="0.00548 0 0" quat="0 0.707107 0 0.707107" mass="0.00158" diaginertia="1.261e-07 1.097e-07 1.907e-08" />
+                                                <joint name="r_finger_1_joint_paradistal_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01 0.01 0.001" type="box" />
+                                            </body>
+                                            <body name="r_finger_1_link_3" pos="0 0.039 0" quat="0.501642 0 0 0.865075">
+                                                <inertial pos="0.01626 0.00049 0.0002" quat="0.520969 0.517877 0.481643 0.477927" mass="0.03354" diaginertia="1.43512e-05 1.26412e-05 2.98016e-06" />
+                                                <joint name="r_finger_1_joint_3" pos="0 0 0" axis="0 0 1" limited="true" range="-0.6632 1.0471" damping="1" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_3" />
+                                                <geom type="mesh" rgba="0 1 0 1" mesh="link_3" />
+                                            </body>
+                                        </body>
+                                    </body>
+                                </body>
+
+                                <body name="r_finger_2_link_0" pos="0.0576492 0.195157 -0.00654675" quat="-0.653702 -0.270618 -0.269798 -0.653184">
+                                    <inertial pos="-0.01 0 0" quat="0.5 0.5 0.5 0.5" mass="0.1" diaginertia="2.5e-05 2.5e-05 1.8e-05" />
+                                    <joint name="r_palm_finger_2_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-0.2967 0.2967" damping="1" />
+                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_0" />
+                                    <geom type="mesh" rgba="0 1 0 1" mesh="link_0" />
+                                    <body name="r_finger_2_link_proximal_actuating_hinge" pos="0 0 0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0012 -0.00162 -0.00161" quat="0.0435928 0.666697 -0.165138 0.725496" mass="0.02647" diaginertia="3.27095e-06 2.25409e-06 1.48186e-06" />
+                                        <joint name="r_finger_2_joint_proximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" />
+                                        <body name="r_finger_2_link_proximal_actuating_bar" pos="0.02858 0 0" quat="0.597192 0 0 0.802098">
+                                            <inertial pos="0.02699 -0.00122 0" quat="0.492947 0.491625 0.50833 0.506862" mass="0.00659" diaginertia="7.19743e-06 7.18272e-06 7.68055e-08" />
+                                            <joint name="r_finger_2_joint_proximal_actuating_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="r_finger_2_link_paraproximal_actuating_hinge" pos="0 0 -0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0064 0 0" quat="0 0.707107 0 0.707107" mass="0.00362" diaginertia="6.5322e-07 5.3588e-07 1.2043e-07" />
+                                        <joint name="r_finger_2_joint_paraproximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" />
+                                        <body name="r_finger_2_link_paraproximal_bar" pos="0.02286 0 0" quat="0.707388 0 0 0.706825">
+                                            <inertial pos="0.02858 -0.00129 0" quat="0.492978 0.491357 0.508576 0.506844" mass="0.00732" diaginertia="8.78875e-06 8.77558e-06 8.22394e-08" />
+                                            <joint name="r_finger_2_joint_paraproximal_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="r_finger_2_link_1" pos="0 0 0" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.00053 0.03218 0" quat="0.00544471 0.00542787 0.707078 0.707093" mass="0.047" diaginertia="6.43594e-05 6.06192e-05 4.97928e-06" />
+                                        <joint name="r_finger_2_joint_1" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.2217" damping="1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_1" />
+                                        <body name="r_finger_2_link_median_actuating_hinge" pos="0 0.05715 0.01" quat="0.982936 0 0 -0.183947">
+                                            <inertial pos="0.0092 0.00514 0" quat="0.195177 0.679637 -0.195177 0.679637" mass="0.00359" diaginertia="7.1813e-07 6.24661e-07 9.94992e-08" />
+                                            <joint name="r_finger_2_joint_median_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="r_finger_2_link_median_bar" pos="0.01625 0.01516 0" quat="0.398652 0 0 0.917102">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.491476 0.48998 0.509977 0.508226" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="r_finger_2_joint_median_actuating_hinge_median_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="r_finger_2_link_paramedian_hinge" pos="0 0.05715 -0.01">
+                                            <inertial pos="-0.01025 0.00046 0" quat="-0.0114321 0.707014 0.0114321 0.707014" mass="0.00276" diaginertia="5.4007e-07 5.03062e-07 4.16477e-08" />
+                                            <joint name="r_finger_2_joint_paramedian_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="r_finger_2_link_median_bar_underactuated" pos="0.01227 0.00329 0" quat="0.707105 0 0 0.707108">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.48998 0.491476 0.508226 0.509977" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="r_finger_2_joint_paramedian_hinge_median_bar_underactuated" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="r_finger_2_link_2" pos="0 0.05715 0">
+                                            <inertial pos="0.00048 0.02167 0.00018" quat="0.00523005 0.00665272 0.709882 0.70427" mass="0.03284" diaginertia="2.24866e-05 1.98645e-05 3.47368e-06" />
+                                            <joint name="r_finger_2_joint_2" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.5708" damping="1" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_2" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_2" />
+                                            <body name="r_finger_2_link_paradistal_hinge" pos="0 0.039 -0.01">
+                                                <inertial pos="0.00548 0 0" quat="0 0.707107 0 0.707107" mass="0.00158" diaginertia="1.261e-07 1.097e-07 1.907e-08" />
+                                                <joint name="r_finger_2_joint_paradistal_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01 0.01 0.001" type="box" />
+                                            </body>
+                                            <body name="r_finger_2_link_3" pos="0 0.039 0" quat="0.501642 0 0 0.865075">
+                                                <inertial pos="0.01626 0.00049 0.0002" quat="0.520969 0.517877 0.481643 0.477927" mass="0.03354" diaginertia="1.43512e-05 1.26412e-05 2.98016e-06" />
+                                                <joint name="r_finger_2_joint_3" pos="0 0 0" axis="0 0 1" limited="true" range="-0.6632 1.0471" damping="1" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_3" />
+                                                <geom type="mesh" rgba="0 1 0 1" mesh="link_3" />
+                                            </body>
+                                        </body>
+                                    </body>
+                                </body>
+
+                                <body name="r_finger_middle_link_0" pos="-0.0321997 0.195154 0.0322368" quat="-0.270836 0.653183 0.653703 -0.26958">
+                                    <inertial pos="-0.01 0 0" quat="0.5 0.5 0.5 0.5" mass="0.1" diaginertia="2.5e-05 2.5e-05 1.8e-05" />
+                                    <joint name="r_palm_finger_middle_joint" pos="0 0 0" axis="0 1 0" damping="1" />
+                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_0" />
+                                    <geom type="mesh" rgba="0 1 0 1" mesh="link_0" />
+                                    <body name="r_finger_middle_link_proximal_actuating_hinge" pos="0 0 0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0012 -0.00162 -0.00161" quat="0.0435928 0.666697 -0.165138 0.725496" mass="0.02647" diaginertia="3.27095e-06 2.25409e-06 1.48186e-06" />
+                                        <joint name="r_finger_middle_joint_proximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" />
+                                        <body name="r_finger_middle_link_proximal_actuating_bar" pos="0.02858 0 0" quat="0.597192 0 0 0.802098">
+                                            <inertial pos="0.02699 -0.00122 0" quat="0.492947 0.491625 0.50833 0.506862" mass="0.00659" diaginertia="7.19743e-06 7.18272e-06 7.68055e-08" />
+                                            <joint name="r_finger_middle_joint_proximal_actuating_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="r_finger_middle_link_paraproximal_actuating_hinge" pos="0 0 -0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0064 0 0" quat="0 0.707107 0 0.707107" mass="0.00362" diaginertia="6.5322e-07 5.3588e-07 1.2043e-07" />
+                                        <joint name="r_finger_middle_joint_paraproximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" />
+                                        <body name="r_finger_middle_link_paraproximal_bar" pos="0.02286 0 0" quat="0.707388 0 0 0.706825">
+                                            <inertial pos="0.02858 -0.00129 0" quat="0.492978 0.491357 0.508576 0.506844" mass="0.00732" diaginertia="8.78875e-06 8.77558e-06 8.22394e-08" />
+                                            <joint name="r_finger_middle_joint_paraproximal_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="r_finger_middle_link_1" pos="0 0 0" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.00053 0.03218 0" quat="0.00544471 0.00542787 0.707078 0.707093" mass="0.047" diaginertia="6.43594e-05 6.06192e-05 4.97928e-06" />
+                                        <joint name="r_finger_middle_joint_1" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.2217" damping="1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_1" />
+                                        <body name="r_finger_middle_link_median_actuating_hinge" pos="0 0.05715 0.01" quat="0.982936 0 0 -0.183947">
+                                            <inertial pos="0.0092 0.00514 0" quat="0.195177 0.679637 -0.195177 0.679637" mass="0.00359" diaginertia="7.1813e-07 6.24661e-07 9.94992e-08" />
+                                            <joint name="r_finger_middle_joint_median_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="r_finger_middle_link_median_bar" pos="0.01625 0.01516 0" quat="0.398652 0 0 0.917102">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.491476 0.48998 0.509977 0.508226" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="r_finger_middle_joint_median_actuating_hinge_median_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="r_finger_middle_link_paramedian_hinge" pos="0 0.05715 -0.01">
+                                            <inertial pos="-0.01025 0.00046 0" quat="-0.0114321 0.707014 0.0114321 0.707014" mass="0.00276" diaginertia="5.4007e-07 5.03062e-07 4.16477e-08" />
+                                            <joint name="r_finger_middle_joint_paramedian_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="r_finger_middle_link_median_bar_underactuated" pos="0.01227 0.00329 0" quat="0.707105 0 0 0.707108">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.48998 0.491476 0.508226 0.509977" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="r_finger_middle_joint_paramedian_hinge_median_bar_underactuated" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="r_finger_middle_link_2" pos="0 0.05715 0">
+                                            <inertial pos="0.00048 0.02167 0.00018" quat="0.00523005 0.00665272 0.709882 0.70427" mass="0.03284" diaginertia="2.24866e-05 1.98645e-05 3.47368e-06" />
+                                            <joint name="r_finger_middle_joint_2" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.5708" damping="1" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_2" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_2" />
+                                            <body name="r_finger_middle_link_paradistal_hinge" pos="0 0.039 -0.01">
+                                                <inertial pos="0.00548 0 0" quat="0 0.707107 0 0.707107" mass="0.00158" diaginertia="1.261e-07 1.097e-07 1.907e-08" />
+                                                <joint name="r_finger_middle_joint_paradistal_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01 0.01 0.001" type="box" />
+                                            </body>
+                                            <body name="r_finger_middle_link_3" pos="0 0.039 0" quat="0.501642 0 0 0.865075">
+                                                <inertial pos="0.01626 0.00049 0.0002" quat="0.520969 0.517877 0.481643 0.477927" mass="0.03354" diaginertia="1.43512e-05 1.26412e-05 2.98016e-06" />
+                                                <joint name="r_finger_middle_joint_3" pos="0 0 0" axis="0 0 1" limited="true" range="-0.6632 1.0471" damping="1" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_3" />
+                                                <geom type="mesh" rgba="0 1 0 1" mesh="link_3" />
+                                            </body>
+                                        </body>
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+        <body name="l_ur5_arm_shoulder_link" pos="0.12495 0.21302 0.42307" quat="0.653595 -0.27036 -0.270576 -0.653075">
+            <inertial pos="0 0 0" mass="3.7" diaginertia="0.0102675 0.0102675 0.00666" />
+            <joint name="l_ur5_arm_shoulder_pan_joint" pos="0 0 0" axis="0 0 1" limited="true" range="-3.14159 3.14159" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="shoulder" />
+            <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="shoulder" />
+            <body name="l_ur5_arm_upper_arm_link" pos="0 0.13585 0" quat="0.707107 0 0.707107 0">
+                <inertial pos="0 0 0.28" mass="8.393" diaginertia="0.226891 0.226891 0.0151074" />
+                <joint name="l_ur5_arm_shoulder_lift_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="upperarm" />
+                <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="upperarm" />
+                <body name="l_ur5_arm_forearm_link" pos="0 -0.1197 0.425">
+                    <inertial pos="0 0 0.25" mass="2.275" diaginertia="0.0494433 0.0494433 0.004095" />
+                    <joint name="l_ur5_arm_elbow_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="forearm" />
+                    <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="forearm" />
+                    <body name="l_ur5_arm_wrist_1_link" pos="0 0 0.39225" quat="0.707107 0 0.707107 0">
+                        <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="1.219" diaginertia="0.21942 0.111173 0.111173" />
+                        <joint name="l_ur5_arm_wrist_1_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                        <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="wrist1" />
+                        <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="wrist1" />
+                        <body name="l_ur5_arm_wrist_2_link" pos="0 0.093 0">
+                            <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="1.219" diaginertia="0.21942 0.111173 0.111173" />
+                            <joint name="l_ur5_arm_wrist_2_joint" pos="0 0 0" axis="0 0 1" limited="true" range="-3.14159 3.14159" />
+                            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="wrist2" />
+                            <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="wrist2" />
+                            <body name="l_ur5_arm_wrist_3_link" pos="0 0 0.09465">
+                                <inertial pos="1.10016e-10 0.136364 4.88137e-05" quat="0.499969 0.500031 -0.500031 0.499969" mass="2.1389" diaginertia="0.0441119 0.0274263 0.0218065" />
+                                <joint name="l_ur5_arm_wrist_3_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-3.14159 3.14159" />
+                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="wrist3" />
+                                <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="wrist3" />
+                                <geom size="0.005 0.005 0.005" pos="-1.7949e-11 0.0723 0" quat="0.707107 0 0 0.707107" type="box" />
+                                <geom pos="0 0.0823 0" quat="0.500199 -0.499801 0.499801 0.500199" type="mesh" contype="0" conaffinity="0" group="1" mesh="robotiq_fts300" />
+                                <geom pos="0 0.0823 0" quat="0.500199 -0.499801 0.499801 0.500199" type="mesh" mesh="robotiq_fts300" />
+                                <geom pos="1.64197e-10 0.17378 7.2848e-05" quat="0.28154 8.61146e-10 0.959549 0.000764115" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="palm" />
+                                <geom size="0.05 0.05 0.05" pos="1.64197e-10 0.17378 7.2848e-05" quat="0.28154 8.61146e-10 0.959549 0.000764115" type="box" rgba="0 1 0 1" />
+                                <body name="l_finger_1_link_0" pos="0.0577286 0.195213 -0.00560494" quat="-0.678775 0.198461 0.199695 -0.678233">
+                                    <inertial pos="-0.01 0 0" quat="0.5 0.5 0.5 0.5" mass="0.1" diaginertia="2.5e-05 2.5e-05 1.8e-05" />
+                                    <joint name="l_palm_finger_1_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-0.2967 0.2967" damping="1" />
+                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_0" />
+                                    <geom type="mesh" rgba="0 1 0 1" mesh="link_0" />
+                                    <body name="l_finger_1_link_proximal_actuating_hinge" pos="0 0 0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0012 -0.00162 -0.00161" quat="0.0435928 0.666697 -0.165138 0.725496" mass="0.02647" diaginertia="3.27095e-06 2.25409e-06 1.48186e-06" />
+                                        <joint name="l_finger_1_joint_proximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" />
+                                        <body name="l_finger_1_link_proximal_actuating_bar" pos="0.02858 0 0" quat="0.597192 0 0 0.802098">
+                                            <inertial pos="0.02699 -0.00122 0" quat="0.492947 0.491625 0.50833 0.506862" mass="0.00659" diaginertia="7.19743e-06 7.18272e-06 7.68055e-08" />
+                                            <joint name="l_finger_1_joint_proximal_actuating_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="l_finger_1_link_paraproximal_actuating_hinge" pos="0 0 -0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0064 0 0" quat="0 0.707107 0 0.707107" mass="0.00362" diaginertia="6.5322e-07 5.3588e-07 1.2043e-07" />
+                                        <joint name="l_finger_1_joint_paraproximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" />
+                                        <body name="l_finger_1_link_paraproximal_bar" pos="0.02286 0 0" quat="0.707388 0 0 0.706825">
+                                            <inertial pos="0.02858 -0.00129 0" quat="0.492978 0.491357 0.508576 0.506844" mass="0.00732" diaginertia="8.78875e-06 8.77558e-06 8.22394e-08" />
+                                            <joint name="l_finger_1_joint_paraproximal_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="l_finger_1_link_1" pos="0 0 0" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.00053 0.03218 0" quat="0.00544471 0.00542787 0.707078 0.707093" mass="0.047" diaginertia="6.43594e-05 6.06192e-05 4.97928e-06" />
+                                        <joint name="l_finger_1_joint_1" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.2217" damping="1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_1" />
+                                        <body name="l_finger_1_link_median_actuating_hinge" pos="0 0.05715 0.01" quat="0.982936 0 0 -0.183947">
+                                            <inertial pos="0.0092 0.00514 0" quat="0.195177 0.679637 -0.195177 0.679637" mass="0.00359" diaginertia="7.1813e-07 6.24661e-07 9.94992e-08" />
+                                            <joint name="l_finger_1_joint_median_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="l_finger_1_link_median_bar" pos="0.01625 0.01516 0" quat="0.398652 0 0 0.917102">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.491476 0.48998 0.509977 0.508226" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="l_finger_1_joint_median_actuating_hinge_median_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="l_finger_1_link_paramedian_hinge" pos="0 0.05715 -0.01">
+                                            <inertial pos="-0.01025 0.00046 0" quat="-0.0114321 0.707014 0.0114321 0.707014" mass="0.00276" diaginertia="5.4007e-07 5.03062e-07 4.16477e-08" />
+                                            <joint name="l_finger_1_joint_paramedian_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="l_finger_1_link_median_bar_underactuated" pos="0.01227 0.00329 0" quat="0.707105 0 0 0.707108">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.48998 0.491476 0.508226 0.509977" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="l_finger_1_joint_paramedian_hinge_median_bar_underactuated" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="l_finger_1_link_2" pos="0 0.05715 0">
+                                            <inertial pos="0.00048 0.02167 0.00018" quat="0.00523005 0.00665272 0.709882 0.70427" mass="0.03284" diaginertia="2.24866e-05 1.98645e-05 3.47368e-06" />
+                                            <joint name="l_finger_1_joint_2" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.5708" damping="1" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_2" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_2" />
+                                            <body name="l_finger_1_link_paradistal_hinge" pos="0 0.039 -0.01">
+                                                <inertial pos="0.00548 0 0" quat="0 0.707107 0 0.707107" mass="0.00158" diaginertia="1.261e-07 1.097e-07 1.907e-08" />
+                                                <joint name="l_finger_1_joint_paradistal_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01 0.01 0.001" type="box" />
+                                            </body>
+                                            <body name="l_finger_1_link_3" pos="0 0.039 0" quat="0.501642 0 0 0.865075">
+                                                <inertial pos="0.01626 0.00049 0.0002" quat="0.520969 0.517877 0.481643 0.477927" mass="0.03354" diaginertia="1.43512e-05 1.26412e-05 2.98016e-06" />
+                                                <joint name="l_finger_1_joint_3" pos="0 0 0" axis="0 0 1" limited="true" range="-0.6632 1.0471" damping="1" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_3" />
+                                                <geom type="mesh" rgba="0 1 0 1" mesh="link_3" />
+                                            </body>
+                                        </body>
+                                    </body>
+                                </body>
+                                <body name="l_finger_2_link_0" pos="0.0188268 0.195108 0.0549809" quat="-0.678775 0.198461 0.199695 -0.678233">
+                                    <inertial pos="-0.01 0 0" quat="0.5 0.5 0.5 0.5" mass="0.1" diaginertia="2.5e-05 2.5e-05 1.8e-05" />
+                                    <joint name="l_palm_finger_2_joint" pos="0 0 0" axis="0 1 0" limited="true" range="-0.2967 0.2967" damping="1" />
+                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_0" />
+                                    <geom type="mesh" rgba="0 1 0 1" mesh="link_0" />
+                                    <body name="l_finger_2_link_proximal_actuating_hinge" pos="0 0 0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0012 -0.00162 -0.00161" quat="0.0435928 0.666697 -0.165138 0.725496" mass="0.02647" diaginertia="3.27095e-06 2.25409e-06 1.48186e-06" />
+                                        <joint name="l_finger_2_joint_proximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" />
+                                        <body name="l_finger_2_link_proximal_actuating_bar" pos="0.02858 0 0" quat="0.597192 0 0 0.802098">
+                                            <inertial pos="0.02699 -0.00122 0" quat="0.492947 0.491625 0.50833 0.506862" mass="0.00659" diaginertia="7.19743e-06 7.18272e-06 7.68055e-08" />
+                                            <joint name="l_finger_2_joint_proximal_actuating_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="l_finger_2_link_paraproximal_actuating_hinge" pos="0 0 -0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0064 0 0" quat="0 0.707107 0 0.707107" mass="0.00362" diaginertia="6.5322e-07 5.3588e-07 1.2043e-07" />
+                                        <joint name="l_finger_2_joint_paraproximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" />
+                                        <body name="l_finger_2_link_paraproximal_bar" pos="0.02286 0 0" quat="0.707388 0 0 0.706825">
+                                            <inertial pos="0.02858 -0.00129 0" quat="0.492978 0.491357 0.508576 0.506844" mass="0.00732" diaginertia="8.78875e-06 8.77558e-06 8.22394e-08" />
+                                            <joint name="l_finger_2_joint_paraproximal_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="l_finger_2_link_1" pos="0 0 0" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.00053 0.03218 0" quat="0.00544471 0.00542787 0.707078 0.707093" mass="0.047" diaginertia="6.43594e-05 6.06192e-05 4.97928e-06" />
+                                        <joint name="l_finger_2_joint_1" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.2217" damping="1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_1" />
+                                        <body name="l_finger_2_link_median_actuating_hinge" pos="0 0.05715 0.01" quat="0.982936 0 0 -0.183947">
+                                            <inertial pos="0.0092 0.00514 0" quat="0.195177 0.679637 -0.195177 0.679637" mass="0.00359" diaginertia="7.1813e-07 6.24661e-07 9.94992e-08" />
+                                            <joint name="l_finger_2_joint_median_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="l_finger_2_link_median_bar" pos="0.01625 0.01516 0" quat="0.398652 0 0 0.917102">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.491476 0.48998 0.509977 0.508226" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="l_finger_2_joint_median_actuating_hinge_median_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="l_finger_2_link_paramedian_hinge" pos="0 0.05715 -0.01">
+                                            <inertial pos="-0.01025 0.00046 0" quat="-0.0114321 0.707014 0.0114321 0.707014" mass="0.00276" diaginertia="5.4007e-07 5.03062e-07 4.16477e-08" />
+                                            <joint name="l_finger_2_joint_paramedian_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="l_finger_2_link_median_bar_underactuated" pos="0.01227 0.00329 0" quat="0.707105 0 0 0.707108">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.48998 0.491476 0.508226 0.509977" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="l_finger_2_joint_paramedian_hinge_median_bar_underactuated" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="l_finger_2_link_2" pos="0 0.05715 0">
+                                            <inertial pos="0.00048 0.02167 0.00018" quat="0.00523005 0.00665272 0.709882 0.70427" mass="0.03284" diaginertia="2.24866e-05 1.98645e-05 3.47368e-06" />
+                                            <joint name="l_finger_2_joint_2" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.5708" damping="1" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_2" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_2" />
+                                            <body name="l_finger_2_link_paradistal_hinge" pos="0 0.039 -0.01">
+                                                <inertial pos="0.00548 0 0" quat="0 0.707107 0 0.707107" mass="0.00158" diaginertia="1.261e-07 1.097e-07 1.907e-08" />
+                                                <joint name="l_finger_2_joint_paradistal_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01 0.01 0.001" type="box" />
+                                            </body>
+                                            <body name="l_finger_2_link_3" pos="0 0.039 0" quat="0.501642 0 0 0.865075">
+                                                <inertial pos="0.01626 0.00049 0.0002" quat="0.520969 0.517877 0.481643 0.477927" mass="0.03354" diaginertia="1.43512e-05 1.26412e-05 2.98016e-06" />
+                                                <joint name="l_finger_2_joint_3" pos="0 0 0" axis="0 0 1" limited="true" range="-0.6632 1.0471" damping="1" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_3" />
+                                                <geom type="mesh" rgba="0 1 0 1" mesh="link_3" />
+                                            </body>
+                                        </body>
+                                    </body>
+                                </body>
+                                <body name="l_finger_middle_link_0" pos="-0.0382961 0.1952 -0.0244795" quat="0.198618 0.678234 0.678774 0.19954">
+                                    <inertial pos="-0.01 0 0" quat="0.5 0.5 0.5 0.5" mass="0.1" diaginertia="2.5e-05 2.5e-05 1.8e-05" />
+                                    <joint name="l_palm_finger_middle_joint" pos="0 0 0" axis="0 1 0" damping="1" />
+                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_0" />
+                                    <geom type="mesh" rgba="0 1 0 1" mesh="link_0" />
+                                    <body name="l_finger_middle_link_proximal_actuating_hinge" pos="0 0 0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0012 -0.00162 -0.00161" quat="0.0435928 0.666697 -0.165138 0.725496" mass="0.02647" diaginertia="3.27095e-06 2.25409e-06 1.48186e-06" />
+                                        <joint name="l_finger_middle_joint_proximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01429 0.00375 0.001" pos="0.01429 0 0" type="box" />
+                                        <body name="l_finger_middle_link_proximal_actuating_bar" pos="0.02858 0 0" quat="0.597192 0 0 0.802098">
+                                            <inertial pos="0.02699 -0.00122 0" quat="0.492947 0.491625 0.50833 0.506862" mass="0.00659" diaginertia="7.19743e-06 7.18272e-06 7.68055e-08" />
+                                            <joint name="l_finger_middle_joint_proximal_actuating_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02699 0.00375 0.001" pos="0.026789 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="l_finger_middle_link_paraproximal_actuating_hinge" pos="0 0 -0.01" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.0064 0 0" quat="0 0.707107 0 0.707107" mass="0.00362" diaginertia="6.5322e-07 5.3588e-07 1.2043e-07" />
+                                        <joint name="l_finger_middle_joint_paraproximal_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                        <geom size="0.01143 0.00375 0.001" pos="0.01143 0 0" type="box" />
+                                        <body name="l_finger_middle_link_paraproximal_bar" pos="0.02286 0 0" quat="0.707388 0 0 0.706825">
+                                            <inertial pos="0.02858 -0.00129 0" quat="0.492978 0.491357 0.508576 0.506844" mass="0.00732" diaginertia="8.78875e-06 8.77558e-06 8.22394e-08" />
+                                            <joint name="l_finger_middle_joint_paraproximal_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.02885 0.00375 0.001" pos="0.02885 0 0" type="box" />
+                                        </body>
+                                    </body>
+                                    <body name="l_finger_middle_link_1" pos="0 0 0" quat="0.501642 0 0 -0.865075">
+                                        <inertial pos="0.00053 0.03218 0" quat="0.00544471 0.00542787 0.707078 0.707093" mass="0.047" diaginertia="6.43594e-05 6.06192e-05 4.97928e-06" />
+                                        <joint name="l_finger_middle_joint_1" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.2217" damping="1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_1" />
+                                        <geom pos="0 0.05717 0" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_1" />
+                                        <body name="l_finger_middle_link_median_actuating_hinge" pos="0 0.05715 0.01" quat="0.982936 0 0 -0.183947">
+                                            <inertial pos="0.0092 0.00514 0" quat="0.195177 0.679637 -0.195177 0.679637" mass="0.00359" diaginertia="7.1813e-07 6.24661e-07 9.94992e-08" />
+                                            <joint name="l_finger_middle_joint_median_actuating_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="l_finger_middle_link_median_bar" pos="0.01625 0.01516 0" quat="0.398652 0 0 0.917102">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.491476 0.48998 0.509977 0.508226" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="l_finger_middle_joint_median_actuating_hinge_median_bar" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="l_finger_middle_link_paramedian_hinge" pos="0 0.05715 -0.01">
+                                            <inertial pos="-0.01025 0.00046 0" quat="-0.0114321 0.707014 0.0114321 0.707014" mass="0.00276" diaginertia="5.4007e-07 5.03062e-07 4.16477e-08" />
+                                            <joint name="l_finger_middle_joint_paramedian_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                            <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                            <geom size="0.01 0.01 0.001" type="box" />
+                                            <body name="l_finger_middle_link_median_bar_underactuated" pos="0.01227 0.00329 0" quat="0.707105 0 0 0.707108">
+                                                <inertial pos="0.01905 -0.00107 0" quat="0.48998 0.491476 0.508226 0.509977" mass="0.00538" diaginertia="3.05722e-06 3.04657e-06 6.2347e-08" />
+                                                <joint name="l_finger_middle_joint_paramedian_hinge_median_bar_underactuated" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01905 0.00375 0.001" pos="0.01905 0 0" type="box" />
+                                            </body>
+                                        </body>
+                                        <body name="l_finger_middle_link_2" pos="0 0.05715 0">
+                                            <inertial pos="0.00048 0.02167 0.00018" quat="0.00523005 0.00665272 0.709882 0.70427" mass="0.03284" diaginertia="2.24866e-05 1.98645e-05 3.47368e-06" />
+                                            <joint name="l_finger_middle_joint_2" pos="0 0 0" axis="0 0 1" limited="true" range="0 1.5708" damping="1" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_2" />
+                                            <geom pos="0 0.0381 0.0075" quat="0.707105 0 0 0.707108" type="mesh" rgba="0 1 0 1" mesh="link_2" />
+                                            <body name="l_finger_middle_link_paradistal_hinge" pos="0 0.039 -0.01">
+                                                <inertial pos="0.00548 0 0" quat="0 0.707107 0 0.707107" mass="0.00158" diaginertia="1.261e-07 1.097e-07 1.907e-08" />
+                                                <joint name="l_finger_middle_joint_paradistal_hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-3.1416 3.1416" />
+                                                <geom size="0.01 0.01 0.001" type="box" contype="0" conaffinity="0" group="1" />
+                                                <geom size="0.01 0.01 0.001" type="box" />
+                                            </body>
+                                            <body name="l_finger_middle_link_3" pos="0 0.039 0" quat="0.501642 0 0 0.865075">
+                                                <inertial pos="0.01626 0.00049 0.0002" quat="0.520969 0.517877 0.481643 0.477927" mass="0.03354" diaginertia="1.43512e-05 1.26412e-05 2.98016e-06" />
+                                                <joint name="l_finger_middle_joint_3" pos="0 0 0" axis="0 0 1" limited="true" range="-0.6632 1.0471" damping="1" />
+                                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0 1 0 1" mesh="link_3" />
+                                                <geom type="mesh" rgba="0 1 0 1" mesh="link_3" />
+                                            </body>
+                                        </body>
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+
+        <!-- <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="base_link" /> -->
+        <!-- <geom size="0.4937 0.28545 0.061875" pos="0 0 0.061875" type="box" /> -->
+
+        <geom size="0.39496 0.28545 0.061875" pos="0 0 0.185625" type="box" />
+        <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="top_chassis" />
+        <geom pos="0.48 0 0.091" type="mesh" contype="0" conaffinity="0" group="1" mesh="bumper" />
+        <geom pos="-0.48 0 0.091" quat="1.32679e-06 0 0 1" type="mesh" contype="0" conaffinity="0" group="1" mesh="bumper" />
+        <geom pos="0 0 0.225" type="mesh" contype="0" conaffinity="0" group="1" mesh="dual_arm_bulkhead" />
+        <geom pos="0 0 0.225" type="mesh" mesh="dual_arm_bulkhead" />
+        <geom pos="0.3155 0.010414 0.44576" quat="0.000796327 1 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.3 0.3 0.3 1" mesh="flir-ptu-simple" />
+        <geom size="0.0225 0.0325 0.022" pos="0.345 0.010414 0.44576" type="box" rgba="0.3 0.3 0.3 1" />
+        <geom size="0.023 0.022 0.022" pos="0.3 0.020914 0.44576" type="box" rgba="0.3 0.3 0.3 1" />
+        <geom size="0.005 0.0075" pos="0.271 0.020414 0.44576" quat="0.707388 0 0.706825 0" type="cylinder" rgba="0.3 0.3 0.3 1" />
+        <geom pos="0.465 0 0.14" quat="1.32679e-06 1 0 0" type="mesh" contype="0" conaffinity="0" group="1" mesh="sick-lms1xx" />
+        <geom size="0.0525 0.05 0.05" pos="0.465 1.32679e-07 0.19" quat="1.32679e-06 1 0 0" type="box" />
+        <geom pos="0.125 -0.15 0.36" quat="0.653595 0.27036 0.270576 -0.653075" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="base" />
+        <geom pos="0.125 -0.15 0.36" quat="0.653595 0.27036 0.270576 -0.653075" type="mesh" rgba="0.7 0.7 0.7 1" mesh="base" />
+        <geom pos="0.125 0.15 0.36" quat="0.653595 -0.27036 -0.270576 -0.653075" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.7 0.7 1" mesh="base" />
+        <geom pos="0.125 0.15 0.36" quat="0.653595 -0.27036 -0.270576 -0.653075" type="mesh" rgba="0.7 0.7 0.7 1" mesh="base" />
+        <body name="front_left_wheel_link" pos="0.256 0.2854 0.03282">
+            <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="2.637" diaginertia="0.04411 0.02467 0.02467" />
+            <joint name="front_left_wheel" pos="0 0 0" axis="0 1 0" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="wheel" />
+            <geom size="0.17775 0.05715" quat="0.707107 0.707106 0 0" type="cylinder" />
+        </body>
+        <body name="front_right_wheel_link" pos="0.256 -0.2854 0.03282">
+            <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="2.637" diaginertia="0.04411 0.02467 0.02467" />
+            <joint name="front_right_wheel" pos="0 0 0" axis="0 1 0" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="wheel" />
+            <geom size="0.17775 0.05715" quat="0.707107 0.707106 0 0" type="cylinder" />
+        </body>
+        <body name="rear_left_wheel_link" pos="-0.256 0.2854 0.03282">
+            <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="2.637" diaginertia="0.04411 0.02467 0.02467" />
+            <joint name="rear_left_wheel" pos="0 0 0" axis="0 1 0" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="wheel" />
+            <geom size="0.17775 0.05715" quat="0.707107 0.707106 0 0" type="cylinder" />
+        </body>
+        <body name="rear_right_wheel_link" pos="-0.256 -0.2854 0.03282">
+            <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="2.637" diaginertia="0.04411 0.02467 0.02467" />
+            <joint name="rear_right_wheel" pos="0 0 0" axis="0 1 0" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="wheel" />
+            <geom size="0.17775 0.05715" quat="0.707107 0.707106 0 0" type="cylinder" />
+        </body>
+        <body name="husky_ptu_tilt_link" pos="0.345 -0.000586 0.51176" quat="0.707105 -0.707108 0 0">
+            <inertial pos="0 0 0" mass="0.65" diaginertia="0.0001 0.0001 0.0001" />
+            <joint name="husky_ptu_pan" pos="0 0 0" axis="0 -1 0" limited="true" range="-2.775 2.775" />
+            <geom pos="-0.0295 0.011 0" quat="0.000796327 1 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.3 0.3 0.3 1" mesh="flir-ptu-simple" />
+            <geom size="0.0225 0.0325 0.022" pos="0 0.011 0" type="box" rgba="0.3 0.3 0.3 1" />
+            <geom size="0.023 0.022 0.022" pos="-0.045 0.0215 0" type="box" rgba="0.3 0.3 0.3 1" />
+            <geom size="0.005 0.0075" pos="-0.074 0.021 0" quat="0.707388 0 0.706825 0" type="cylinder" rgba="0.3 0.3 0.3 1" />
+            <body name="husky_ptu_tilted_link" pos="0 0 0" quat="0.707105 -0.707108 0 0">
+                <inertial pos="0 1.63383e-07 -0.0613599" quat="0.499998 0.500002 0.499998 0.500002" mass="0.342012" diaginertia="0.000766531 0.000739434 0.000100971" />
+                <joint name="husky_ptu_tilt" pos="0 0 0" axis="0 1 0" limited="true" range="-0.82 0.52" />
+                <geom pos="0 1.63384e-07 -0.06136" quat="0.499998 0.50005 0.499998 0.499954" type="mesh" contype="0" conaffinity="0" group="1" mesh="pointgrey_bumblebee2" />
+                <geom size="0.0237 0.0785 0.018" pos="0 1.63384e-07 -0.06136" quat="-3.67321e-06 1 0 0" type="box" />
+            </body>
+        </body>
+
+
+    </body>
+
+</mujoco>

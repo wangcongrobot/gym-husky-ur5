@@ -1,0 +1,123 @@
+<mujoco>
+    <tendon>
+		<!--Middlefinger tendons-->
+		<fixed name="middle12_cpl" range="0 1">
+			<joint joint="r_finger_middle_joint_1"  coef="1"/>
+			<joint joint="r_finger_middle_joint_2"  coef="-1.5"/>
+		</fixed>
+		<fixed name="middle23_cpl" range="0 1">
+			<joint joint="r_finger_middle_joint_2"  coef="1"/>
+			<joint joint="r_finger_middle_joint_3"  coef="-3.5"/>
+		</fixed>
+
+		<!--finger2 tendons-->
+        <fixed name="finger2_12_cpl" range="0 1">
+			<joint joint="r_finger_2_joint_1"  coef="1"/>
+			<joint joint="r_finger_2_joint_2"  coef="-1.5"/>
+		</fixed>
+		<fixed name="finger2_23_cpl" range="0 1">
+			<joint joint="r_finger_2_joint_2"  coef="1"/>
+			<joint joint="r_finger_2_joint_3"  coef="-3.5"/>
+		</fixed>
+
+		<!--Finger1 tendons-->
+        <fixed name="finger1_12_cpl" range="0 1">
+			<joint joint="r_finger_1_joint_1"  coef="1"/>
+			<joint joint="r_finger_1_joint_2"  coef="-1.5"/>
+		</fixed>
+		<fixed name="finger1_23_cpl" range="0 1">
+			<joint joint="r_finger_1_joint_2"  coef="1"/>
+			<joint joint="r_finger_1_joint_3"  coef="-3.5"/>
+		</fixed>
+	</tendon>
+
+    <equality>
+		<!-- GRIPPER Couplings -->
+		<tendon name="middle12_cpl" 	tendon1="middle12_cpl"/>
+		<tendon name="middle23_cpl" 	tendon1="middle23_cpl"/>
+
+        <tendon name="finger2_12_cpl" 	tendon1="finger2_12_cpl"/>
+		<tendon name="finger2_23_cpl" 	tendon1="finger2_23_cpl"/>
+
+        <tendon name="finger1_12_cpl" 	tendon1="finger1_12_cpl"/>
+		<tendon name="finger1_23_cpl" 	tendon1="finger1_23_cpl"/>
+
+		<!-- SCISSOR Coupling -->
+		<joint name="finger_12_scissor" joint1="r_palm_finger_2_joint" joint2="r_palm_finger_1_joint" polycoef="0 -1 0 0 0"/>
+	</equality>
+
+    <!--ACTUATORS-->
+    <actuator>
+        <!--UR5-->
+        <!-- position control mode -->
+        <!-- <position name='shoulder_pan' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='shoulder_pan_joint' kp="500"/>
+        <position name='shoulder_lift' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='shoulder_lift_joint' kp="500"/>
+        <position name='forearm' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='elbow_joint' kp="500"/>
+        <position name='wrist_1' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='wrist_1_joint' kp="100"/>
+        <position name='wrist_2' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='wrist_2_joint' kp="100"/>
+        <position name='wrist_3' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='wrist_3_joint' kp="100"/> -->
+
+        <!-- force control mode -->
+        <!-- <motor name='shoulder_pan_T' ctrllimited="true" ctrlrange="-2 2" joint='shoulder_pan_joint' gear="101"/> range -150 150 -->
+        <!-- <motor name='shoulder_lift_T' ctrllimited="true" ctrlrange="-2 2" joint='shoulder_lift_joint' gear="101"/> -->
+        <!-- <motor name='forearm_T' ctrllimited="true" ctrlrange="-2 2" joint='elbow_joint' gear="101" /> -->
+        <!-- <motor name='wrist_1_T' ctrllimited="true" ctrlrange="-1 1" joint='wrist_1_joint' gear="101"/>  range -28 28 -->
+        <!-- <motor name='wrist_2_T' ctrllimited="true" ctrlrange="-1 1" joint='wrist_2_joint' gear="101"/> -->
+        <!-- <motor name='wrist_3_T' ctrllimited="true" ctrlrange="-1 1" joint='wrist_3_joint' gear="101"/> -->
+
+        <!-- velocity control mode -->
+        <!--<velocity name='shoulder_pan_v' class="UR5" joint='shoulder_pan_joint' kv="10"/>-->
+        <!--<velocity name='shoulder_lift_v' class="UR5" joint='shoulder_lift_joint' />-->
+        <!--<velocity name='forearm_v' class="UR5" joint='elbow_joint' />-->
+        <!--<velocity name='wrist_1_v' class="UR5" joint='wrist_1_joint' />-->
+        <!--<velocity name='wrist_2_v' class="UR5" joint='wrist_2_joint'/>-->
+        <!--<velocity name='wrist_3_v' class="UR5" joint='wrist_3_joint'/>-->
+
+        <!--Gripper-->
+        <!-- position control mode -->
+        <!-- <position name='r_finger_1' ctrllimited="true" kp="20" joint='r_finger_1_joint_1' ctrlrange='0 1.2217'/>
+        <position name='r_finger_2' ctrllimited="true" kp="20" joint='r_finger_2_joint_1' ctrlrange='0 1.2217'/>
+        <position name='r_middle_finger'  ctrllimited="true" kp="20" joint='r_finger_middle_joint_1' ctrlrange='0 1.2217'/>
+        <position name='r_finger_scissor' ctrllimited="true" kp="20" joint='r_palm_finger_1_joint' ctrlrange="-0.2967 0.2967"/>  -->
+
+        <!-- force control mode -->
+        <motor name='finger_1_T' ctrllimited="true" joint='r_finger_1_joint_1' ctrlrange='-0.8 .8' gear="20"/>
+        <motor name='finger_2_T' ctrllimited="true" joint='r_finger_2_joint_1' ctrlrange='-0.8 .8' gear="20"/>
+        <motor name='middle_finger_T'  ctrllimited="true" joint='r_finger_middle_joint_1' ctrlrange='-0.8 .8' gear="20"/>
+        <motor name='finger_scissor_T' ctrllimited="true" joint='r_palm_finger_1_joint' ctrlrange="-0.8 0.8" gear="15"/>
+    
+        <!-- gripper joint -->
+        <!-- <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="gripperpalm_finger_1_joint" kp="20" name="gripper_palm_finger_1_joint" forcelimited="true" forcerange="-500 500"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_1_joint_1" kp="2" name="gripper_finger_1_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_1_joint_2" kp="2" name="gripper_finger_1_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_1_joint_3" kp="2" name="gripper_finger_1_joint_3" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="gripperpalm_finger_2_joint" kp="20" name="gripper_palm_finger_2_joint" forcelimited="true" forcerange="-500 500"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_2_joint_1" kp="2" name="gripper_finger_2_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_2_joint_2" kp="2" name="gripper_finger_2_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_2_joint_3" kp="2" name="gripper_finger_2_joint_3" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_middle_joint_1" kp="2" name="gripper_finger_middle_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_middle_joint_2" kp="2" name="gripper_finger_middle_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_middle_joint_3" kp="2" name="gripper_finger_middle_joint_3" forcelimited="true" forcerange="-20 20"/> -->
+    
+    </actuator>
+
+    <!-- <sensor>
+        <touch name="gripperpalm_frc" 		site="gripperpalm"/>
+
+        <touch name="finger_1_polp_1_frc"	site="gripperfinger_1_polp_1"/>
+    	<touch name="finger_1_polp_2_frc" 	site="gripperfinger_1_polp_2"/>
+        <touch name="finger_1_polp_3_frc" 	site="gripperfinger_1_polp_3"/>
+
+        <touch name="finger_2_link_1_frc" 	site="gripperfinger_2_polp_1"/>
+        <touch name="finger_2_link_2_frc" 	site="gripperfinger_2_polp_2"/>
+        <touch name="finger_2_link_3_frc" 	site="gripperfinger_2_polp_3"/>
+
+        <touch name="finger_middle_link_1_frc" 	site="gripperfinger_middle_polp_1"/>
+        <touch name="finger_middle_link_2_frc" 	site="gripperfinger_middle_polp_2"/>
+        <touch name="finger_middle_link_3_frc" 	site="gripperfinger_middle_polp_3"/>
+    </sensor> -->
+
+    <!-- <default class="gripper:joint">
+        <joint damping="5" />
+    </default> -->
+</mujoco>

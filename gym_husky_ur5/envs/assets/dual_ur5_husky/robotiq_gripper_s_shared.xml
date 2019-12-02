@@ -1,0 +1,36 @@
+<!-- Add damping = 0.3, 0.1 for bigger ones -->
+<!-- Set kp to larger -->
+<mujoco model="s-model_articulated">
+    <asset>
+        <!-- <mesh name="palm" file="stls//robotiq_s_gripper/palm.STL" />
+        <mesh name="link_0" file="stls/robotiq_s_gripper/link_0.STL" />
+        <mesh name="link_1" file="stls/robotiq_s_gripper/link_1.STL" />
+        <mesh name="link_2" file="stls/robotiq_s_gripper/link_2.STL" />
+        <mesh name="link_3" file="stls/robotiq_s_gripper/link_3.STL" /> -->
+    </asset>
+    <actuator>
+        <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="palm_finger_1_joint" kp="20" name="gripper_palm_finger_1_joint" forcelimited="true" forcerange="-500 500"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="finger_1_joint_1" kp="2" name="gripper_finger_1_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="finger_1_joint_2" kp="2" name="gripper_finger_1_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="finger_1_joint_3" kp="2" name="gripper_finger_1_joint_3" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="palm_finger_2_joint" kp="20" name="gripper_palm_finger_2_joint" forcelimited="true" forcerange="-500 500"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="finger_2_joint_1" kp="2" name="gripper_finger_2_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="finger_2_joint_2" kp="2" name="gripper_finger_2_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="finger_2_joint_3" kp="2" name="gripper_finger_2_joint_3" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="finger_middle_joint_1" kp="2" name="gripper_finger_middle_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="finger_middle_joint_2" kp="2" name="gripper_finger_middle_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="finger_middle_joint_3" kp="2" name="gripper_finger_middle_joint_3" forcelimited="true" forcerange="-20 20"/>
+    </actuator>
+
+    <contact>
+        <exclude body1="finger_1_link_1" body2="palm_base"/>
+        <exclude body1="finger_2_link_1" body2="palm_base"/>
+        <exclude body1="finger_middle_link_1" body2="palm_base"/>
+        <exclude body1="finger_1_link_0" body2="palm_base"/>
+        <exclude body1="finger_2_link_0" body2="palm_base"/>
+        <exclude body1="finger_middle_link_0" body2="palm_base"/>
+        <exclude body1="finger_1_link_0" body2="finger_1_link_1"/>
+        <exclude body1="finger_2_link_0" body2="finger_2_link_1"/>
+        <exclude body1="finger_middle_link_0" body2="finger_middle_link_1"/>
+    </contact>
+</mujoco>

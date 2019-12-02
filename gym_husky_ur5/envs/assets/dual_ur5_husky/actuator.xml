@@ -1,0 +1,89 @@
+<mujoco>
+    <actuator>
+
+        <!-- husky base control -->
+		<!-- <position ctrllimited="true" ctrlrange="-1.5 1.5" joint="base_x_slide_joint" kp="30000" name="base_x_slide_joint" user="1"></position>
+        <position ctrllimited="true" ctrlrange="-0.57 0.57" kp="30000" joint="base_z_hinge_joint" name="base_z_hinge_joint" user="1" /> -->
+
+        <!-- left ur5 arm control -->
+        <!--UR5-->
+        <!-- position control mode -->
+        <!-- <position name='shoulder_pan' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='shoulder_pan_joint' kp="500"/>
+        <position name='shoulder_lift' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='shoulder_lift_joint' kp="500"/>
+        <position name='forearm' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='elbow_joint' kp="500"/>
+        <position name='wrist_1' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='wrist_1_joint' kp="100"/>
+        <position name='wrist_2' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='wrist_2_joint' kp="100"/>
+        <position name='wrist_3' ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='wrist_3_joint' kp="100"/> -->
+
+        <!-- force control mode -->
+        <!-- <motor name='shoulder_pan_T' ctrllimited="true" ctrlrange="-2 2" joint='shoulder_pan_joint' gear="101"/> range -150 150 -->
+        <!-- <motor name='shoulder_lift_T' ctrllimited="true" ctrlrange="-2 2" joint='shoulder_lift_joint' gear="101"/> -->
+        <!-- <motor name='forearm_T' ctrllimited="true" ctrlrange="-2 2" joint='elbow_joint' gear="101" /> -->
+        <!-- <motor name='wrist_1_T' ctrllimited="true" ctrlrange="-1 1" joint='wrist_1_joint' gear="101"/>  range -28 28 -->
+        <!-- <motor name='wrist_2_T' ctrllimited="true" ctrlrange="-1 1" joint='wrist_2_joint' gear="101"/> -->
+        <!-- <motor name='wrist_3_T' ctrllimited="true" ctrlrange="-1 1" joint='wrist_3_joint' gear="101"/> -->
+
+        <!-- velocity control mode -->
+        <!--<velocity name='shoulder_pan_v' class="UR5" joint='shoulder_pan_joint' kv="10"/>-->
+        <!--<velocity name='shoulder_lift_v' class="UR5" joint='shoulder_lift_joint' />-->
+        <!--<velocity name='forearm_v' class="UR5" joint='elbow_joint' />-->
+        <!--<velocity name='wrist_1_v' class="UR5" joint='wrist_1_joint' />-->
+        <!--<velocity name='wrist_2_v' class="UR5" joint='wrist_2_joint'/>-->
+        <!--<velocity name='wrist_3_v' class="UR5" joint='wrist_3_joint'/>-->
+
+        <!-- right ur5 arm control -->
+
+        <!-- left gripper control -->
+        <!-- position control mode -->
+        <!-- <position name='finger_1' ctrllimited="true" kp="20" joint='r_palm_finger_1_joint' ctrlrange='0 1.2217'/>
+        <position name='finger_2' ctrllimited="true" kp="20" joint='r_palm_finger_2_joint' ctrlrange='0 1.2217'/>
+        <position name='middle_finger'  ctrllimited="true" kp="20" joint='r_palm_finger_middle_joint' ctrlrange='0 1.2217'/>
+        <position name='finger_scissor' ctrllimited="true" kp="20" joint='r_finger_1_joint_1' ctrlrange="-0.2967 0.2967"/>  -->
+        <!-- https://github.com/StanfordVL/robosuite/blob/7b727b075607466662ba8fac8bf8634936bdc58d/robosuite/models/assets/grippers/robotiq_gripper_s.xml#L11 -->
+        <!-- <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="l_palm_finger_1_joint" kp="20" name="l_gripper_palm_finger_1_joint" forcelimited="true" forcerange="-500 500"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="l_finger_1_joint_1" kp="2" name="l_gripper_finger_1_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="l_finger_1_joint_2" kp="2" name="l_gripper_finger_1_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="l_finger_1_joint_3" kp="2" name="l_gripper_finger_1_joint_3" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="l_palm_finger_2_joint" kp="20" name="l_gripper_palm_finger_2_joint" forcelimited="true" forcerange="-500 500"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="l_finger_2_joint_1" kp="2" name="l_gripper_finger_2_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="l_finger_2_joint_2" kp="2" name="l_gripper_finger_2_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="l_finger_2_joint_3" kp="2" name="l_gripper_finger_2_joint_3" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="l_finger_middle_joint_1" kp="2" name="l_gripper_finger_middle_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="l_finger_middle_joint_2" kp="2" name="l_gripper_finger_middle_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="l_finger_middle_joint_3" kp="2" name="l_gripper_finger_middle_joint_3" forcelimited="true" forcerange="-20 20"/> -->
+
+        <!-- right gripper control -->
+        <!-- https://github.com/StanfordVL/robosuite/blob/7b727b075607466662ba8fac8bf8634936bdc58d/robosuite/models/assets/grippers/robotiq_gripper_s.xml#L11 -->
+        <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="r_palm_finger_1_joint" kp="20" name="r_gripper_palm_finger_1_joint" forcelimited="true" forcerange="-500 500"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="r_finger_1_joint_1" kp="2" name="r_gripper_finger_1_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="r_finger_1_joint_2" kp="2" name="r_gripper_finger_1_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="r_finger_1_joint_3" kp="2" name="r_gripper_finger_1_joint_3" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="r_palm_finger_2_joint" kp="20" name="r_gripper_palm_finger_2_joint" forcelimited="true" forcerange="-500 500"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="r_finger_2_joint_1" kp="2" name="r_gripper_finger_2_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="r_finger_2_joint_2" kp="2" name="r_gripper_finger_2_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="r_finger_2_joint_3" kp="2" name="r_gripper_finger_2_joint_3" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="r_finger_middle_joint_1" kp="2" name="r_gripper_finger_middle_joint_1" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="r_finger_middle_joint_2" kp="2" name="r_gripper_finger_middle_joint_2" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="r_finger_middle_joint_3" kp="2" name="r_gripper_finger_middle_joint_3" forcelimited="true" forcerange="-20 20"/>
+
+        <!-- camera pan tile control -->
+
+	</actuator>
+
+    <!-- <sensor>
+        <touch name="gripperpalm_frc" 		site="gripperpalm"/>
+
+        <touch name="finger_1_polp_1_frc"	site="gripperfinger_1_polp_1"/>
+    	<touch name="finger_1_polp_2_frc" 	site="gripperfinger_1_polp_2"/>
+        <touch name="finger_1_polp_3_frc" 	site="gripperfinger_1_polp_3"/>
+
+        <touch name="finger_2_link_1_frc" 	site="gripperfinger_2_polp_1"/>
+        <touch name="finger_2_link_2_frc" 	site="gripperfinger_2_polp_2"/>
+        <touch name="finger_2_link_3_frc" 	site="gripperfinger_2_polp_3"/>
+
+        <touch name="finger_middle_link_1_frc" 	site="gripperfinger_middle_polp_1"/>
+        <touch name="finger_middle_link_2_frc" 	site="gripperfinger_middle_polp_2"/>
+        <touch name="finger_middle_link_3_frc" 	site="gripperfinger_middle_polp_3"/>
+    </sensor> -->
+
+</mujoco>

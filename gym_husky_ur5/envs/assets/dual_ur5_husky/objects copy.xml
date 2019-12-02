@@ -1,0 +1,54 @@
+<mujoco>
+    <body name="object0" pos="0.025 0.025 0.025">
+        <joint name="object0:joint" type="free" damping="0.01"></joint>
+        <geom size="0.05 0.05 0.05" type="box" contype='1' conaffinity='1' margin='0.001' solimp='0.99 0.99 0.01' solref='0.01 1' condim="4" name="object0_visual" material="block_mat" mass="2" group="1" friction="1 .001 .001" ></geom>
+        <geom size="0.05 0.05 0.05" type="box" contype='1' conaffinity='1' margin='0.001' solimp='0.99 0.99 0.01' solref='0.01 1' condim="4" name="object0_collision" material="block_mat" mass="2" group="0" friction="1 .001 .001" ></geom>
+
+        <site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+    </body>
+		
+    <body name="sphere" pos="0.025 0.025 0.025">
+        <joint name="sphere:joint" type="free" damping="0.01"></joint>
+        <geom size="0.05 0.05 0.05" type="sphere" condim="4" name="sphere_visual" material="block_mat" mass="2" group="1" friction="1 .001 .001" ></geom>
+        <geom size="0.05 0.05 0.05" type="sphere" condim="4" name="sphere_collision" material="block_mat" mass="2" group="0" friction="1 .001 .001" ></geom>
+
+        <site name="sphere" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+    </body>
+
+    <body name="cylinder" pos="0.025 0.025 0.025">
+        <joint name="cylinder:joint" type="free" damping="0.01"></joint>
+        <geom size="0.05 0.07" type="cylinder" condim="4" name="cylinder_visual" material="coke" mass="4" group="1" friction="1 .001 .001" ></geom>
+        <geom size="0.05 0.07" type="cylinder" condim="4" name="cylinder_collision" material="coke" mass="4" group="0" friction="1 .001 .001" ></geom>
+
+        <site name="cylinder" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+    </body>
+
+    <body name="bottle">
+        <joint name="bottle:joint" type="free" damping="0.01"></joint>
+        <geom pos="0 0 0" mesh="bottle_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="50" friction="0.95 0.3 0.1" material="glass" group="1"/>
+        <geom pos="0 0 0" mesh="bottle_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="50" friction="0.95 0.3 0.1" material="glass" group="0"/>
+        <site rgba="0 0 0 0" size="0.005" pos="0 0 -0.082" name="bottle_bottom_site"/>
+        <site rgba="0 0 0 0" size="0.005" pos="0 0 0.075" name="bottle_top_site"/>
+        <site rgba="0 0 0 0" size="0.005" pos="0.0254 0.0254 0" name="bottle_horizontal_radius_site"/>
+    </body>
+
+    <body name="can">
+        <joint name="can:joint" type="free" damping="0.01"></joint>
+        <geom pos="0 0 0" mesh="can_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="coke" group="1" condim="4"/>
+        <geom pos="0 0 0" mesh="can_mesh" type="mesh" material="coke"  conaffinity="0" contype="0" group="1" mass="0.0001"/>
+
+        <site rgba="0 0 0 0" size="0.005" pos="0 0 -0.06" name="can_bottom_site"/>
+        <site rgba="0 0 0 0" size="0.005" pos="0 0 0.04" name="can_top_site"/>
+        <site rgba="0 0 0 0" size="0.005" pos="0.025 0.025 0" name="can_horizontal_radius_site"/>
+    </body>
+
+    <body name="milk">
+        <joint name="milk:joint" type="free" damping="0.01"></joint>
+        <geom pos="0 0 0" mesh="milk_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="ceramic" group="1" condim="4"/>
+        <geom pos="0 0 0" mesh="milk_mesh" type="mesh" material="ceramic"  conaffinity="0" contype="0"  group="1" mass="0.0001"/>
+
+        <site rgba="0 0 0 0" size="0.005" pos="0 0 -0.085" name="milk_bottom_site"/>
+        <site rgba="0 0 0 0" size="0.005" pos="0 0 0.075" name="milk_top_site"/>
+        <site rgba="0 0 0 0" size="0.005" pos="0.025 0.025 0" name="milk_horizontal_radius_site"/>
+    </body>
+</mujoco>

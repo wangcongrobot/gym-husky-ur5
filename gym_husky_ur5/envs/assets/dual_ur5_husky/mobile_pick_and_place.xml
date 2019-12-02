@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco model="Husky_dual_ur5">
+	<compiler angle="radian" coordinate="local" meshdir="../stls/dual_ur5_husky" texturedir="../textures"></compiler>
+	<!-- <option timestep="0.002" gravity="0 0 -9.81" cone="elliptic"  >
+		<flag warmstart="enable"></flag>
+	</option> -->
+	<!-- The choice between pyramidal and elliptic friction cones is a modeling choice rather than an algorithmic choice, i.e. it leads to a different optimization problem solved with the same algorithms. Elliptic cones correspond more closely to physical reality. However pyramidal cones can improve the performance of the algorithms - but not necessarily. While the default is pyramidal, we recommend trying the elliptic cones. When contact slip is a problem, the best way to suppress it is to use elliptic cones, large impratio, and the Newton algorithm with very small tolerance. If that is not sufficient, enable the Noslip solver. 
+	http://mujoco.org/book/modeling.html#CAlgorithms -->
+	<option timestep="2e-3"
+			iterations="10"
+			tolerance="1e-10"
+			impratio="300"
+			gravity="0 0 -9.81"
+			solver="PGS"
+			cone="elliptic" />
+
+	<size njmax="600" nconmax="150" nstack="300000"/>
+
+	<include file="shared.xml"></include>
+    <visual>
+        <map fogstart="3" fogend="5" force="0.1" znear="0.1"/>
+        <quality shadowsize="2048" offsamples="8"/>
+        <global offwidth="800" offheight="800"/>
+    </visual>
+
+	<worldbody>
+		<!-- <geom name="floor0" pos="0.8 0.75 0" size="1.85 1.7 1.5" type="plane" condim="3" material="floor_mat"></geom> -->
+		<body name="floor0" pos="0.8 0.75 0">
+			<site name="target0" pos="0 0 0.5" size="0.02 0.02 0.02" rgba="1 0 0 0" type="sphere"></site>
+		</body>
+
+		<geom condim="3" material="floorplane" name="floor" pos="0 0 0" size="3 3 .125" type="plane"/>
+
+		<light directional="true" ambient="0.2 0.2 0.2" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" castshadow="false" pos="0 0 4" dir="0 0 -1" name="light0"></light>
+
+		<!-- front view -->
+		<camera mode="fixed" name="frontview" pos="3.0 0 1.85" quat="0.56 0.43 0.43 0.56"/>
+		<!-- bird view -->
+		<camera mode="fixed" name="birdview" pos="0.0 0 3.0" quat="0.7071 0 0 0.7071"/>
+		<!-- agent view -->
+		<camera mode="fixed" name="agentview" pos="3.0 0 1.85" quat="0.56 0.43 0.43 0.56"/>
+
+		<!-- Robot -->
+		<include file="robot_husky_mobile.xml"></include>
+
+		<!-- Object -->
+		<include file="objects.xml" />
+
+		<body pos="0.9 -0.6 0.15" name="table0">
+			<geom size="0.25 0.3 0.15" type="box" mass="2000" material="table_mat"></geom>
+			<geom size="0.25 0.3 0.15" type="box" mass="2000" group="1" material="table_mat"></geom>
+		</body>
+		
+	</worldbody>
+
+    <actuator>
+        <!-- husky base position control -->
+		<position ctrllimited="true" ctrlrange="-1.0 0.5" joint="base_x_slide_joint" kp="30000" name="base_x_slide_joint" user="1"></position>
+        <position ctrllimited="true" ctrlrange="-0.57 0.57" kp="30000" joint="base_z_hinge_joint" name="base_z_hinge_joint" user="1" />
+		<!-- husky base velocity control -->
+		<!-- <velocity ctrllimited="true" ctrlrange="-0.01 0.01" joint="base_x_slide_joint" kp="3000" name="base_x_slide_joint" user="1" ></velocity> -->
+	</actuator>
+	<!-- <include file="actuator.xml"></include> -->
+	<include file="gripper.xml"></include>
+	<!-- <include file="robotiq_gripper_s_shared.xml"></include> -->
+</mujoco>
