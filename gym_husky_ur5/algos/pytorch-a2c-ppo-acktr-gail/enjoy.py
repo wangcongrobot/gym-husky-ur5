@@ -9,6 +9,8 @@ import torch
 from a2c_ppo_acktr.envs import VecPyTorch, make_vec_envs
 from a2c_ppo_acktr.utils import get_render_func, get_vec_normalize
 
+import gym_husky_ur5
+
 sys.path.append('a2c_ppo_acktr')
 
 parser = argparse.ArgumentParser(description='RL')
@@ -21,8 +23,8 @@ parser.add_argument(
     help='log interval, one log per n updates (default: 10)')
 parser.add_argument(
     '--env-name',
-    default='PongNoFrameskip-v4',
-    help='environment to train on (default: PongNoFrameskip-v4)')
+    default='MobileDualUR5HuskyPickAndPlace-v1',
+    help='environment to train on (default: MobileDualUR5HuskyPickAndPlace-v1)')
 parser.add_argument(
     '--load-dir',
     default='./trained_models/',

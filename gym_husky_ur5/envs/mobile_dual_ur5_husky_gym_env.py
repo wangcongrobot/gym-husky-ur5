@@ -1,6 +1,6 @@
 import numpy as np
 
-from gym_husky_ur5.envs import robot_gym_env, utils_ros
+from gym_husky_ur5.envs import robot_gym_env, utils_ros, utils_test
 from gym.envs.robotics import rotations, utils
 
 import rospy
@@ -485,6 +485,7 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
         dt = self.sim.nsubsteps * self.sim.model.opt.timestep
         grip_velp = self.sim.data.get_site_xvelp('r_grip_site') * dt
         robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
+        ur5_qpos, ur5_qvel = utils_test.robot_get_ur5_joint_state_obs(self.sim)
         if self.has_object:
             object_pos = self.sim.data.get_site_xpos('object0')
             # rotations
@@ -505,9 +506,25 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
             achieved_goal = grip_pos.copy()
         else:
             achieved_goal = np.squeeze(object_pos.copy())
+        print("grip_pos: ", grip_pos)
+        print("object_pos: ", object_pos)
+        print("object_pos.ravel: ", object_pos.ravel())
+        print("object_rel_pos.ravel: ", object_rel_pos.ravel())
+        print("object_rel_pos: ", object_rel_pos)
+        print("ur5_qpos: ", ur5_qpos)
+        print("ur5_qvel: ", ur5_qvel)
         obs = np.concatenate([
-            grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
-            object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel,
+            grip_pos, 
+            object_pos.ravel(), 
+            object_rel_pos.ravel(), 
+            ur5_qpos,
+            ur5_qvel,
+            # gripper_state, 
+            # object_rot.ravel(),
+            # object_velp.ravel(), 
+            # object_velr.ravel(), 
+            # grip_velp, 
+            # gripper_vel,
         ])
 
         return obs

@@ -2,11 +2,12 @@ import argparse
 
 import torch
 
+import gym_husky_ur5
 
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
     parser.add_argument(
-        '--algo', default='a2c', help='algorithm to use: a2c | ppo | acktr')
+        '--algo', default='ppo', help='algorithm to use: a2c | ppo | acktr')
     parser.add_argument(
         '--gail',
         action='store_true',
@@ -43,7 +44,7 @@ def get_args():
     parser.add_argument(
         '--use-gae',
         action='store_true',
-        default=False,
+        default=True,
         help='use generalized advantage estimation')
     parser.add_argument(
         '--gae-lambda',
@@ -75,12 +76,12 @@ def get_args():
     parser.add_argument(
         '--num-processes',
         type=int,
-        default=16,
-        help='how many training CPU processes to use (default: 16)')
+        default=1,
+        help='how many training CPU processes to use (default: 25)')
     parser.add_argument(
         '--num-steps',
         type=int,
-        default=5,
+        default=2048,
         help='number of forward steps in A2C (default: 5)')
     parser.add_argument(
         '--ppo-epoch',
@@ -110,7 +111,7 @@ def get_args():
     parser.add_argument(
         '--eval-interval',
         type=int,
-        default=None,
+        default=100,
         help='eval interval, one eval per n updates (default: None)')
     parser.add_argument(
         '--num-env-steps',
@@ -119,11 +120,11 @@ def get_args():
         help='number of environment steps to train (default: 10e6)')
     parser.add_argument(
         '--env-name',
-        default='PongNoFrameskip-v4',
+        default='MobileDualUR5HuskyPickAndPlace-v1',
         help='environment to train on (default: PongNoFrameskip-v4)')
     parser.add_argument(
         '--log-dir',
-        default='/tmp/gym/',
+        default='./logs/husky_ur5/',
         help='directory to save agent logs (default: /tmp/gym)')
     parser.add_argument(
         '--save-dir',
@@ -137,7 +138,7 @@ def get_args():
     parser.add_argument(
         '--use-proper-time-limits',
         action='store_true',
-        default=False,
+        default=True,
         help='compute returns taking into account time limits')
     parser.add_argument(
         '--recurrent-policy',

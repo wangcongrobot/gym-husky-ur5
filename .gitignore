@@ -129,4 +129,6 @@ dmypy.json
 .pyre/
 
 # VSCode
-./vscode
+.vscode/
+
+.ipynb_checkpoints/

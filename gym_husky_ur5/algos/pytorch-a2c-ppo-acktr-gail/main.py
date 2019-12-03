@@ -19,6 +19,7 @@ from a2c_ppo_acktr.model import Policy
 from a2c_ppo_acktr.storage import RolloutStorage
 from evaluation import evaluate
 
+import gym_husky_ur5
 
 def main():
     args = get_args()

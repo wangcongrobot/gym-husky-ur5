@@ -1,0 +1,2 @@
+Logging to /home/cong/ros_ws/openai_ros_ws/src/gym-husky-ur5/gym_husky_ur5/algos/pytorch-a2c-ppo-acktr-gail/logs/husky_ur5
+Creating dummy env object to get spaces
