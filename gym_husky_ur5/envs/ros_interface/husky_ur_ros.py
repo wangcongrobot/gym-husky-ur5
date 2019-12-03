@@ -15,10 +15,16 @@ import numpy as np
 
 # ROS 
 import rospy
+import roslaunch
+import rosparam
+import rostopic
+
+import rosmsg, rosservice
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist, Pose
 from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry
+
 from husky_train.srv import EePose, EePoseRequest, EeRpy, EeRpyRequest, EeTraj, EeTrajRequest, JointTraj, JointTrajRequest
 
 from robotiq_msg.msg import SModelRobotOutput
@@ -34,9 +40,17 @@ class HuskyUR5ROS(object):
                  use_gripper=True,
                  ):
 
+        # Environment variable
+        self.env = os.environ.copy()
+
+        # run ROS core if not already running
+        self.core = None # roscore
+        self.gui = None # RQT
+        master_uri = 11311
+        self.init_core(port=master_uri)
         try:
             rospy.init_node('husky_ur5_ros_interface', anonymous=True)
-            rospy.loginfo("ROS node husky_ur5_ros_interface has already been initialized")
+            rospy.logwarn("ROS node husky_ur5_ros_interface has already been initialized")
         except rospy.exceptions.ROSException:
             rospy.logwarn('ROS node husky_ur5_ros_interface has not been initialized')
 
@@ -97,8 +111,8 @@ class HuskyUR5ROS(object):
         self.rostopic_gripper_left_cmd = '/left_hand/command'
         self.rostopic_gripper_right_cmd = '/right_hand/command'
         # Publisher
-        self.gripper_left_pub_cmd = rospy.Publisher(self.rostopic_gripper_left_cmd, SModelRobotOutput, queue_size=1)
-        self.gripper_right_pub_cmd = rospy.Publisher(self.rostopic_gripper_right_cmd, SModelRobotOutput, queue_size=1)
+        self.gripper_left_pub_cmd = rospy.Publisher('/left_hand/command', SModelRobotOutput, queue_size=1)
+        self.gripper_right_pub_cmd = rospy.Publisher('/right_hand/command', SModelRobotOutput, queue_size=1)
 
         ####### Camera BB8 Stereo camera
 
@@ -120,13 +134,51 @@ class HuskyUR5ROS(object):
         while joints is None and not rospy.is_shutdown():
             try:
                 joints = rospy.wait_for_message(self.rostopic_arm_joint_states, JointState, timeout=1.0)
-                rospy.logdebug("Current " + str(self.rostopic_arm_joint_states) + "READY=>" + str(joints))
+                rospy.logwarn("Current " + str(self.rostopic_arm_joint_states) + "READY=>" + str(joints))
             except:
                 rospy.logerr("Current " + str(self.rostopic_arm_joint_states) + " not ready yet, retrying...")
-
+        
+        self.gripper_reset('left')
+        self.gripper_reset('right')
         self.gripper_activate('left')
         self.gripper_activate('right')
 
+    @staticmethod
+    def is_core_running():
+        """
+        Return True is the ROS core is running.
+        """
+        try:
+            rostopic.get_topic_class('/roscore')
+        except rostopic.ROSTopicIOException as e:
+            return False
+        return True
+
+    def init_core(self, uri='localhost', port=11311):
+        """Initialize the core if it is not running.
+        Form [1], "the ROS core will start up:
+        - a ROS master
+        - a ROS parameter server
+        - a rosout logging node"
+        
+        Args:
+            uri (str): ROS master URI. The ROS_MASTER_URI will be set to `http://<uri>:<port>/`.
+            port (int): Port to run the master on.
+
+        References:
+            - [1] roscore: http://wiki.ros.org/roscore 
+        """
+        # if the core is not already running, run it
+        if not self.is_core_running():
+            self.env["ROS_MASTER_URI"] = "http://" + uri + ":" + str(port)
+
+            # this is for the rospy methods such as: wait_for_service(), init_node(), ...
+            os.environ['ROS_MASTER_URI'] = self.env['ROS_MASTER_URI']
+
+            # run ROS core if not already running
+            # if "roscore" not in [p.name() for p in ptutil.process_iter()]:
+            # subprocess.Popen("roscore", env=self.env)
+            self.core = subprocess.Popen(["roscore", "-p", str(port)], env=self.env, preexec_fn=os.setid) # , shell=True)
     ### Base Husky
         
     def base_stop(self):
@@ -160,6 +212,16 @@ class HuskyUR5ROS(object):
 
         return NotImplementedError
 
+    def base_velocity_cmd(self, cmd):
+        command = Twist()
+        command.linear.x = cmd[0]
+        command.angular.z = cmd[1]
+
+        self.base_ctrl_pub.publish(command)
+        rospy.sleep(1.0)
+
+        return True
+
     ### Arm UR5
     def arm_get_joint_name(self, arm):
         return self.arm_joint_names
@@ -178,7 +240,7 @@ class HuskyUR5ROS(object):
 
     def arm_get_joint_angles(self, arm):
 
-        return NotImplementedError
+        return self.arm_joint_angles
 
     def arm_get_joint_velocity(self, arm):
 
@@ -190,10 +252,13 @@ class HuskyUR5ROS(object):
 
     def arm_set_joint_positions(self, positions):
     
-        joint_state = JointState()
-        joint_state.position = tuple(positions)
-        self.joint_pub.publish(joint_state)
-        return NotImplementedError
+        joint_positions = JointTrajRequest()
+        for i in range(len(positions)):
+            joint_positions.point.positions.append(positions[i])
+
+        result = self.arm_joint_traj_client(joint_positions)
+
+        return result.success
 
     def arm_set_joint_velocities(self, velocityies):
     
@@ -203,15 +268,16 @@ class HuskyUR5ROS(object):
 
         return NotImplementedError
 
-    def arm_set_ee_pose(self, pose):
+    def arm_set_ee_pose(self, action):
         ee_target = EeTrajRequest()
-        ee_target.pose.orientation.w = pose.orientation.w
-        ee_target.pose.orientation.x = pose.orientation.x
-        ee_target.pose.orientation.y = pose.orientation.y
-        ee_target.pose.orientation.z = pose.orientation.z
-        ee_target.pose.position.x = pose.position.x
-        ee_target.pose.position.y = pose.position.y
-        ee_target.pose.position.z = pose.position.z
+   
+        ee_target.pose.position.x = action[0]
+        ee_target.pose.position.y = action[1]
+        ee_target.pose.position.z = action[2]
+        ee_target.pose.orientation.w = action[3]
+        ee_target.pose.orientation.x = action[4]
+        ee_target.pose.orientation.y = action[5]
+        ee_target.pose.orientation.z = action[6]
 
         result = self.arm_ee_traj_client(ee_target)
 
@@ -251,6 +317,7 @@ class HuskyUR5ROS(object):
                 if idx < len(msg.effort):
                     self.arm_joint_efforts[name] = msg.effort[idx]
         self.arm_joint_state_lock.release()
+        print("callback")
 
 
     ### Camera BB8 Stereo
@@ -263,7 +330,7 @@ class HuskyUR5ROS(object):
     ### Gripper Robotiq 3finger
     def gripper_gen_cmd(self, char, command):
         """Update the command according to the character entered by the user."""    
-            
+        # command = SModelRobotOutput()
         if char == 'a':
             command = SModelRobotOutput()
             command.rACT = 1
@@ -324,50 +391,74 @@ class HuskyUR5ROS(object):
             if command.rFRA < 0:
                 command.rFRA = 0
 
+        # print("generated command: ", command)
         return command
 
     def gripper_activate(self, gripper):
+        command = SModelRobotOutput()
         if gripper == 'left':
-            command = self.gripper_gen_cmd('a', 'left')
-            if not rospy.is_shutdown():
-                self.gripper_left_pub_cmd.publish(command)
-                rospy.sleep(2.0)
-                rospy.loginfo("Left Gripper Activated")
+            command = self.gripper_gen_cmd('a', command)
+            # if not rospy.is_shutdown():
+            self.gripper_left_pub_cmd.publish(command)
+            # print(command)
+            rospy.sleep(1.0)
+            rospy.logwarn("Left Gripper Activated")
 
         if gripper == 'right':
-            command = self.gripper_gen_cmd('a', 'right')
-            if not rospy.is_shutdown():
-                self.gripper_right_pub_cmd.publish(command)
-                rospy.sleep(2.0)      
-                rospy.loginfo("Right Gripper Activated")  
-    
+            command = self.gripper_gen_cmd('a', command)
+            # if not rospy.is_shutdown():
+            self.gripper_right_pub_cmd.publish(command)
+            rospy.sleep(1.0)      
+            rospy.logwarn("Right Gripper Activated")  
+
+    def gripper_reset(self, gripper):
+        command = SModelRobotOutput()
+        if gripper == 'left':
+            command = self.gripper_gen_cmd('r', command)
+            # if not rospy.is_shutdown():
+            self.gripper_left_pub_cmd.publish(command)
+            # print(command)
+            rospy.sleep(1.0)
+            rospy.logwarn("Left Gripper Activated")
+
+        if gripper == 'right':
+            command = self.gripper_gen_cmd('r', command)
+            # if not rospy.is_shutdown():
+            self.gripper_right_pub_cmd.publish(command)
+            rospy.sleep(1.0)      
+            rospy.logwarn("Right Gripper Activated")  
+
     def gripper_open(self, gripper):
+        command = SModelRobotOutput()
+        command = self.gripper_gen_cmd('a', command)
         if gripper == 'left':
-            command = self.gripper_gen_cmd('o', 'left')
-            if not rospy.is_shutdown():
-                self.gripper_left_pub_cmd.publish(command)
-                rospy.sleep(2.0)
-                rospy.loginfo("Left Gripper Opened")
+            command = self.gripper_gen_cmd('o', command)
+            # if not rospy.is_shutdown():
+            self.gripper_left_pub_cmd.publish(command)
+            rospy.sleep(2.0)
+            rospy.logwarn("Left Gripper Opened")
 
         if gripper == 'right':
-            command = self.gripper_gen_cmd('o', 'left')
-            if not rosy.shutdown():
-                self.gripper_right_pub_cmd.publish(command)
-                rospy.sleep(2.0)  
-                rospy.loginfo("Right Gripper Opened")
+            command = self.gripper_gen_cmd('o', command)
+            # if not rospy.shutdown():
+            self.gripper_right_pub_cmd.publish(command)
+            rospy.sleep(2.0)  
+            rospy.logwarn("Right Gripper Opened")
 
     def gripper_close(self, gripper):
+        command = SModelRobotOutput()
+        command = self.gripper_gen_cmd('a', command)
         if gripper == 'left':
-            command = self.gripper_gen_cmd('c', 'left')
-            if not rospy.is_shutdown():
-                self.gripper_left_pub_cmd.publish(command)
-                rospy.sleep(2.0)
-                rospy.loginfo("Left Gripper Closed")
+            command = self.gripper_gen_cmd('c', command)
+            # if not rospy.is_shutdown():
+            self.gripper_left_pub_cmd.publish(command)
+            rospy.sleep(2.0)
+            rospy.logwarn("Left Gripper Closed")
 
         if gripper == 'right':
-            command = self.gripper_gen_cmd('c', 'left')
-            if not rosy.shutdown():
-                self.gripper_right_pub_cmd.publish(command)
-                rospy.sleep(2.0) 
-                rospy.loginfo("Right Gripper Closed")
+            command = self.gripper_gen_cmd('c', command)
+            # if not rospy.shutdown():
+            self.gripper_right_pub_cmd.publish(command)
+            rospy.sleep(2.0) 
+            rospy.logwarn("Right Gripper Closed")
 

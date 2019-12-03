@@ -76,7 +76,9 @@ def genCommand(char, command):
         if command.rFRA < 0:
             command.rFRA = 0
 
+    print("gen cmd: ", command)
     return command
+
 
 def gripper_control(action):
     """Main loop which requests new commands and publish them on the SModelRobotOutput topic."""
@@ -84,7 +86,7 @@ def gripper_control(action):
     # rospy.init_node('SModelSimpleController')
 
     topic_name = 'left_hand/command'
-    topic_name = 'right_hand/command'
+    # topic_name = 'right_hand/command'
     pub = rospy.Publisher(topic_name, SModelRobotOutput)
 
     command = SModelRobotOutput()
@@ -92,17 +94,20 @@ def gripper_control(action):
     gripper_cmd = action[-1]
     if action[-1] == 1: # open
         gripper_cmd = 'o'
-    elif action[-1] == -1: # close
+    elif action[1] == -1: # close
         gripper_cmd = 'c' 
 
     if not rospy.is_shutdown():
 
-        command = genCommand(gripper_cmd, command)            
+        command = genCommand(gripper_cmd, command)      
+        # print(command)      
         
         pub.publish(command)
 
         rospy.sleep(0.1)
                         
 
-# if __name__ == '__main__':
-#     publisher()
+if __name__ == '__main__':
+    action = [0,1]
+    rospy.init_node("test_gripper")
+    gripper_control(action)
