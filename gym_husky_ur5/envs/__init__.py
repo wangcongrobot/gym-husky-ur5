@@ -13,3 +13,5 @@ from gym_husky_ur5.envs.mobile_dual_ur5_husky_ros_env import MobileDualUR5HuskyR
 from gym_husky_ur5.envs.dual_ur5_husky.mobile_pick_and_place import MobileDualUR5HuskyPickAndPlaceEnv
 from gym_husky_ur5.envs.dual_ur5_husky.mobile_pick_and_place_gym import MobileDualUR5HuskyPickAndPlaceGymEnv
 from gym_husky_ur5.envs.dual_ur5_husky.mobile_pick_and_place_ros import MobileDualUR5HuskyPickAndPlaceROSEnv
+
+from gym_husky_ur5.envs.ros_interface.husky_ur_ros import HuskyUR5ROS

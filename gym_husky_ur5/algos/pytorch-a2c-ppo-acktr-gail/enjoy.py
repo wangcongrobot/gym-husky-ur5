@@ -27,8 +27,8 @@ parser.add_argument(
     help='environment to train on (default: MobileDualUR5HuskyPickAndPlace-v1)')
 parser.add_argument(
     '--load-dir',
-    default='./trained_models/',
-    help='directory to save agent logs (default: ./trained_models/)')
+    default='./trained_models/ppo',
+    help='directory to save agent logs (default: ./trained_models/ppo)')
 parser.add_argument(
     '--non-det',
     action='store_true',
@@ -93,5 +93,5 @@ while True:
             humanPos, humanOrn = p.getBasePositionAndOrientation(torsoId)
             p.resetDebugVisualizerCamera(distance, yaw, -20, humanPos)
 
-    if render_func is not None:
-        render_func('human')
+    # if render_func is not None:
+        # render_func('human')

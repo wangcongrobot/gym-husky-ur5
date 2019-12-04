@@ -17,17 +17,16 @@ print('num_actuator: ', num_actuator)
 print('joint names:', env.sim.model.joint_names)
 print("gripper pose: ", env.sim.data.get_site_xpos("r_grip_site"), env.sim.data.get_site_xmat("r_grip_site"))
 print("qpos: ", env.sim.data.qpos)
-env.render('human')
+# env.render('human')
 #env = gym.wrappers.Monitor(env, './video', force=True)
 # plt.imshow(env.render(mode='rgb_array', camera_id=0))
 plt.show()
-
 
 # plt.show()
 # action = np.array([0.1, 0.0, 0.0, -0.1])
 for i in range(20):
   env.reset()
-  env.render('human')
+#   env.render('human')
   # action[-1] += 0.1
   # if action[-1] > 0.01:
         # action[-1] = -1.0
@@ -45,7 +44,7 @@ for i in range(20):
     # print("reward:", reward)
     # print("done:", done)
     # print("info:", info)
-    env.render('human')
+#     env.render('human')
     print("gripper mocap pos: ", env.sim.data.get_mocap_pos('gripper_r:mocap'))
     print("gripper mocap quat: ", env.sim.data.get_mocap_quat('gripper_r:mocap'))
     print("gripper site xpos and xmat : ", env.sim.data.get_site_xpos("r_grip_site"), env.sim.data.get_site_xmat("r_grip_site"))

@@ -38,10 +38,13 @@ class HuskyUR5ROS(object):
                  use_base=True,
                  use_camera=True,
                  use_gripper=True,
+                 debug_print=True,
                  ):
 
         # Environment variable
         self.env = os.environ.copy()
+
+        self.debug_print = debug_print
 
         # run ROS core if not already running
         self.core = None # roscore
@@ -203,10 +206,10 @@ class HuskyUR5ROS(object):
         z: 0.0
         '''
         cmd = Twist()
-        cmd.linear.x = xyt_position.x
-        cmd.angular.z = xyt_position.z
-        if not rospy.is_shutdown():
-            self.base_ctrl_pub.publish(cmd)
+        cmd.linear.x = xyt_position[0]
+        cmd.angular.z = xyt_position[1]
+        # if not rospy.is_shutdown():
+        self.base_ctrl_pub.publish(cmd)
 
     def base_go_to_absolute(self, xyt_position):
 
@@ -244,7 +247,7 @@ class HuskyUR5ROS(object):
 
     def arm_get_joint_velocity(self, arm):
 
-        return NotImplementedError
+        return self.arm_joint_velocities
 
     def arm_get_joint_torque(self, arm):
 
@@ -283,6 +286,13 @@ class HuskyUR5ROS(object):
 
         return True
 
+    def arm_set_ee_pose_relative(self, action):
+        delta_ee_position = action
+        delta_x = action[0]
+        delta_y = action[1]
+        delta_z = action[2]
+        return NotImplementedError
+
     def arm_move_ee_xyz(self, displacement, eef_step=0.005):
         """
         Keep the current orientation fixed, move the end
@@ -317,7 +327,7 @@ class HuskyUR5ROS(object):
                 if idx < len(msg.effort):
                     self.arm_joint_efforts[name] = msg.effort[idx]
         self.arm_joint_state_lock.release()
-        print("callback")
+        # print("callback")
 
 
     ### Camera BB8 Stereo
@@ -419,14 +429,14 @@ class HuskyUR5ROS(object):
             self.gripper_left_pub_cmd.publish(command)
             # print(command)
             rospy.sleep(1.0)
-            rospy.logwarn("Left Gripper Activated")
+            rospy.logwarn("Left Gripper Reset")
 
         if gripper == 'right':
             command = self.gripper_gen_cmd('r', command)
             # if not rospy.is_shutdown():
             self.gripper_right_pub_cmd.publish(command)
             rospy.sleep(1.0)      
-            rospy.logwarn("Right Gripper Activated")  
+            rospy.logwarn("Right Gripper Reset")  
 
     def gripper_open(self, gripper):
         command = SModelRobotOutput()
