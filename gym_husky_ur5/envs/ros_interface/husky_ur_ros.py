@@ -1,7 +1,6 @@
 # This class is used to communicate with husky ur5 robot.
 # First initial version only consider one ur 5 arm
 
-
 from __future__ import print_function
 
 import copy
@@ -25,10 +24,9 @@ from geometry_msgs.msg import Twist, Pose
 from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry
 
-from husky_train.srv import EePose, EePoseRequest, EeRpy, EeRpyRequest, EeTraj, EeTrajRequest, JointTraj, JointTrajRequest
+from husky_train.srv import EePose, EePoseRequest, EeRpy, EeRpyRequest, EeTraj, EeTrajRequest, JointTraj, JointTrajRequest, EeDelta, EeDeltaRequest
 
-from robotiq_msg.msg import SModelRobotOutput
-
+from robotiq_s_model_articulated_msgs.msg import SModelRobotOutput
 
 class HuskyUR5ROS(object):
 
@@ -72,11 +70,11 @@ class HuskyUR5ROS(object):
 
         # Params
         self.arm_joint_names_r = ["r_ur5_arm_shoulder_pan_joint", 
-                                "r_ur5_arm_shoulder_lift_joint", 
-                                "r_ur5_arm_elbow_joint", 
-                                "r_ur5_arm_wrist_1_joint", 
-                                "r_ur5_arm_wrist_2_joint", 
-                                "r_ur5_arm_wrist_3_joint"]
+                                  "r_ur5_arm_shoulder_lift_joint", 
+                                  "r_ur5_arm_elbow_joint", 
+                                  "r_ur5_arm_wrist_1_joint", 
+                                  "r_ur5_arm_wrist_2_joint", 
+                                  "r_ur5_arm_wrist_3_joint"]
         self.arm_joint_names = ["l_ur5_arm_shoulder_pan_joint", 
                                 "l_ur5_arm_shoulder_lift_joint", 
                                 "l_ur5_arm_elbow_joint", 
@@ -108,14 +106,15 @@ class HuskyUR5ROS(object):
         self.arm_joint_traj_client = rospy.ServiceProxy('/joint_traj_srv', JointTraj)
         self.arm_ee_pose_client = rospy.ServiceProxy('ee_pose_srv', EePose)
         self.arm_ee_rpy_client = rospy.ServiceProxy('/ee_rpy_srv', EeRpy)
+        self.arm_ee_delta_pose_client = rospy.ServiceProxy('/ee_delta_srv', EeDelta)
 
         ####### Gripper Robotiq 3-finger gripper
         # Topics
-        self.rostopic_gripper_left_cmd = '/left_hand/command'
-        self.rostopic_gripper_right_cmd = '/right_hand/command'
+        self.rostopic_gripper_left_cmd = 'l_gripper/SModelRobotOutput'
+        self.rostopic_gripper_right_cmd = 'r_gripper/SModelRobotOutput'
         # Publisher
-        self.gripper_left_pub_cmd = rospy.Publisher('/left_hand/command', SModelRobotOutput, queue_size=1)
-        self.gripper_right_pub_cmd = rospy.Publisher('/right_hand/command', SModelRobotOutput, queue_size=1)
+        self.gripper_left_pub_cmd = rospy.Publisher(self.rostopic_gripper_left_cmd, SModelRobotOutput, queue_size=1)
+        self.gripper_right_pub_cmd = rospy.Publisher(self.rostopic_gripper_right_cmd, SModelRobotOutput, queue_size=1)
 
         ####### Camera BB8 Stereo camera
 
@@ -287,11 +286,11 @@ class HuskyUR5ROS(object):
         return True
 
     def arm_set_ee_pose_relative(self, action):
-        delta_ee_position = action
-        delta_x = action[0]
-        delta_y = action[1]
-        delta_z = action[2]
-        return NotImplementedError
+        ee_delta_target = EeDeltaRequest()
+        ee_delta_target.pose.position.x = action[0]
+        ee_delta_target.pose.position.y = action[1]
+        ee_delta_target.pose.position.z = action[2]
+        return self.arm_ee_delta_pose_client(ee_delta_target)
 
     def arm_move_ee_xyz(self, displacement, eef_step=0.005):
         """
@@ -329,13 +328,10 @@ class HuskyUR5ROS(object):
         self.arm_joint_state_lock.release()
         # print("callback")
 
-
     ### Camera BB8 Stereo
     def camera_get_rgb(self):
 
         return NotImplementedError
-
-
 
     ### Gripper Robotiq 3finger
     def gripper_gen_cmd(self, char, command):
