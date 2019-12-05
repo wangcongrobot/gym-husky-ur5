@@ -1,0 +1,7 @@
+<launch>
+
+    <rosparam file="$(find husky_train)/config/husky_ur_motion_planner_parameters.yaml" command="load" />
+
+    <node name="kinematics_parser_test" pkg="husky_train" type="kinematics_parser_test" output="screen" />
+
+</launch>

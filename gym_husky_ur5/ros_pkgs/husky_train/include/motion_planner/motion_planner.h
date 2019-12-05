@@ -28,7 +28,7 @@
 #include <actionlib/client/simple_action_client.h>
 
 // custom
-// #include "jrc18sia_motion_planner/jrc18sia_kinematics_parser.h"
+#include "motion_planner/kinematics_parser.h"
 
 // custom ROS Service
 #include <husky_train/EePose.h>
@@ -153,16 +153,19 @@ public:
   bool executeTrajectory(const trajectory_msgs::JointTrajectory& trajectory)
   {
     // Create a Follow Joint Trajectory Action Client
-    actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> action_client("/j2n6s300/follow_joint_trajectory", true);
+    actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> action_client(moveit_traj_action_topic_, true);
     if(!action_client.waitForServer(ros::Duration(2.0)))
     {
       ROS_ERROR("Cannot connect to action server");
       return false;
     }
+    ROS_INFO("actionlib initialized successfully");
 
     control_msgs::FollowJointTrajectoryGoal goal;
     goal.trajectory = trajectory;
     goal.goal_time_tolerance = ros::Duration(1.0);
+
+    // ROS_INFO_STREAM(goal);
 
     return action_client.sendGoalAndWait(goal) == actionlib::SimpleClientGoalState::SUCCEEDED;
   }
@@ -185,8 +188,8 @@ private:
   ros::NodeHandle nh_;
   ros::Duration timeout_;
 
-  // Custom FK & IK of Kinova Jaco2 arm
-//   Parser parser_;
+  // Custom FK & IK of UR5 arm
+  Parser parser_;
 
   // MoveIt
   moveit::planning_interface::MoveGroupInterface *group_;
@@ -201,7 +204,30 @@ private:
   std::string address;
   std::string robot_type_;
 
-  /***Get parameters from jrc18sia_motion_planner_parameters.yaml***/
+  std::string moveit_traj_action_topic_;
+  std::string moveit_traj_arm_base_frame_;
+
+  std::vector<std::string> left_arm_joint_names_ = {"l_ur5_arm_elbow_joint", "l_ur5_arm_shoulder_lift_joint", "l_ur5_arm_shoulder_pan_joint", "l_ur5_arm_wrist_1_joint", "l_ur5_arm_wrist_2_joint", "l_ur5_arm_wrist_3_joint"};
+  std::vector<std::string> right_arm_joint_names_ = {"r_ur5_arm_elbow_joint", "r_ur5_arm_shoulder_lift_joint", "r_ur5_arm_shoulder_pan_joint", "r_ur5_arm_wrist_1_joint", "r_ur5_arm_wrist_2_joint", "r_ur5_arm_wrist_3_joint"};
+  std::vector<std::string> wheel_names_ = {"front_left_wheel", "front_right_wheel", "rear_left_wheel", "rear_right_wheel"};
+  std::vector<std::string> ptu_names_ = {"husky_ptu_pan", "husky_ptu_tilt"};
+
+  std::string use_arm_;
+
+/*
+name: [front_left_wheel, front_right_wheel, 
+
+husky_ptu_pan, husky_ptu_tilt, 
+
+l_ur5_arm_elbow_joint, l_ur5_arm_shoulder_lift_joint, l_ur5_arm_shoulder_pan_joint, l_ur5_arm_wrist_1_joint,
+  l_ur5_arm_wrist_2_joint, l_ur5_arm_wrist_3_joint, 
+  
+  r_ur5_arm_elbow_joint, r_ur5_arm_shoulder_lift_joint, r_ur5_arm_shoulder_pan_joint, r_ur5_arm_wrist_1_joint, r_ur5_arm_wrist_2_joint, r_ur5_arm_wrist_3_joint, 
+  
+  rear_left_wheel, rear_right_wheel]
+*/
+
+  /***Get parameters from husky_ur_motion_planner_parameters.yaml***/
   // MoveIt config
   double position_tolerance_;
   double orientation_tolerance_;
@@ -224,19 +250,19 @@ private:
   bool debug_print_;
   bool confirm_act_;
 
-    ros::ServiceServer ee_traj_srv_;
-    ros::ServiceServer joint_traj_srv_;
-    ros::ServiceServer ee_pose_srv_;
-    ros::ServiceServer ee_rpy_srv_;
-    geometry_msgs::Pose pose_target_;
+  ros::ServiceServer ee_traj_srv_;
+  ros::ServiceServer joint_traj_srv_;
+  ros::ServiceServer ee_pose_srv_;
+  ros::ServiceServer ee_rpy_srv_;
+  geometry_msgs::Pose pose_target_;
 
-    bool EeTrajCallback(husky_train::EeTraj::Request& req,
-                        husky_train::EeTraj::Response& res);
-    bool JointTrajCallback(husky_train::JointTraj::Request& req,
-                           husky_train::JointTraj::Response& res);
-    bool EePoseCallback(husky_train::EePose::Request& req,
-                        husky_train::EePose::Response& res);
-    bool EeRpyCallback(husky_train::EeRpy::Request& req,
+  bool EeTrajCallback(husky_train::EeTraj::Request& req,
+                      husky_train::EeTraj::Response& res);
+  bool JointTrajCallback(husky_train::JointTraj::Request& req,
+                          husky_train::JointTraj::Response& res);
+  bool EePoseCallback(husky_train::EePose::Request& req,
+                      husky_train::EePose::Response& res);
+  bool EeRpyCallback(husky_train::EeRpy::Request& req,
                        husky_train::EeRpy::Response& res);
 
 };

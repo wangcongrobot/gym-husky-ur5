@@ -20,7 +20,7 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
         self, model_path, n_substeps, gripper_extra_height, block_gripper,
         has_object, target_in_the_air, target_offset, obj_range, target_range,
         distance_threshold, initial_qpos, reward_type, n_actions,
-        use_real_robot
+        use_real_robot, debug_print
     ):
         """Initializes a new Dual_UR5_Husky environment.
 
@@ -84,10 +84,9 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
             'r_ur5_arm_wrist_3_joint': 0.0,
         }
 
-        self.debug_print = True
+        self.debug_print = debug_print
 
         # rospy.init_node("gym")
-        use_real_robot = True
         self._use_real_robot = use_real_robot
         if self._use_real_robot:
             self.husky_ur5_robot = husky_ur_ros.HuskyUR5ROS(debug_print=self.debug_print)

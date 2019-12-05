@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   pluginlib
   cmake_modules
 )
+find_package(Eigen REQUIRED)
 
 ## Generate services in the 'srv' folder
  add_service_files(
@@ -50,16 +51,32 @@ catkin_package(
 include_directories(
  include motion_planner
  ${catkin_INCLUDE_DIRS}
+   include ${Eigen_INCLUDE_DIRS}
 )
 
 # Library files directory
 link_directories(${catkin_LIBRARY_DIRS})
 
+## Declare a C++ library : custom DH kinematics
+add_library(kinematics_parser src/kinematics_parser.cpp)
+target_link_libraries(kinematics_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
 ## Declare a C++ library : motion_planner
 add_library(motion_planner src/motion_planner.cpp)
-target_link_libraries(motion_planner ${catkin_LIBRARIES})
+target_link_libraries(motion_planner kinematics_parser ${catkin_LIBRARIES})
 
 add_executable(motion_planner_node src/motion_planner_node.cpp)
 target_link_libraries(motion_planner_node 
+                      motion_planner
+                      ${catkin_LIBRARIES})
+
+add_executable(motion_planner_node_test src/motion_planner_node_test.cpp)
+target_link_libraries(motion_planner_node_test
+                      motion_planner
+                      ${catkin_LIBRARIES})
+
+add_executable(kinematics_parser_test src/kinematics_parser_test.cpp)
+target_link_libraries(kinematics_parser_test
+                      kinematics_parser
                       motion_planner
                       ${catkin_LIBRARIES})
