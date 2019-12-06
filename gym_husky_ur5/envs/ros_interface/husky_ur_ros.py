@@ -32,7 +32,7 @@ class HuskyUR5ROS(object):
 
     def __init__(self,
                  robot_name='husky_ur5',
-                 use_arm=True,
+                 use_arm="left",
                  use_base=True,
                  use_camera=True,
                  use_gripper=True,
@@ -43,6 +43,8 @@ class HuskyUR5ROS(object):
         self.env = os.environ.copy()
 
         self.debug_print = debug_print
+
+        self.use_arm = use_arm
 
         # run ROS core if not already running
         self.core = None # roscore
@@ -75,12 +77,21 @@ class HuskyUR5ROS(object):
                                   "r_ur5_arm_wrist_1_joint", 
                                   "r_ur5_arm_wrist_2_joint", 
                                   "r_ur5_arm_wrist_3_joint"]
-        self.arm_joint_names = ["l_ur5_arm_shoulder_pan_joint", 
-                                "l_ur5_arm_shoulder_lift_joint", 
-                                "l_ur5_arm_elbow_joint", 
-                                "l_ur5_arm_wrist_1_joint", 
-                                "l_ur5_arm_wrist_2_joint", 
-                                "l_ur5_arm_wrist_3_joint"]
+        self.arm_joint_names_l = ["l_ur5_arm_shoulder_pan_joint", 
+                                  "l_ur5_arm_shoulder_lift_joint", 
+                                  "l_ur5_arm_elbow_joint", 
+                                  "l_ur5_arm_wrist_1_joint", 
+                                  "l_ur5_arm_wrist_2_joint", 
+                                  "l_ur5_arm_wrist_3_joint"]
+        if self.use_arm == "right":
+            self.arm_joint_names = self.arm_joint_names_r
+        if self.use_arm == "left":
+            self.arm_joint_names = self.arm_joint_names_l
+
+        self.arm_joint_home_r = [1.56996011734, -2.84751588503, 2.79816007614, -1.57001763979, 0.524644315243, -3.5587941305e-05]
+        self.arm_joint_home_l = [-1.57001048723, -0.294129673635, -2.79563862482, -1.57005387941, -0.524643723165, 2.39684504777e-05]
+        self.arm_joint_prepare_r = [1.93697440624, -1.95270091692, 1.76591014862, 0.136884212494, 1.84678673744, 0.0161745846272]
+        self.arm_joint_prepare_l = [-1.87909251848, -1.03788692156, -1.53594905535, -3.57448703447, -1.69703323046, 1.44130086899]
         self.arm_dof = len(self.arm_joint_names)
         self.arm_base_frame = ''
         self.arm_ee_frame = ''
@@ -140,10 +151,12 @@ class HuskyUR5ROS(object):
             except:
                 rospy.logerr("Current " + str(self.rostopic_arm_joint_states) + " not ready yet, retrying...")
         
-        self.gripper_reset('left')
-        self.gripper_reset('right')
-        self.gripper_activate('left')
-        self.gripper_activate('right')
+        if self.use_arm == 'left':
+            self.gripper_reset('left')
+            self.gripper_activate('left')
+        if self.use_arm == 'right':
+            self.gripper_reset('right')
+            self.gripper_activate('right')
 
     @staticmethod
     def is_core_running():
@@ -226,7 +239,10 @@ class HuskyUR5ROS(object):
 
     ### Arm UR5
     def arm_get_joint_name(self, arm):
-        return self.arm_joint_names
+        if arm == "left":
+            return self.arm_joint_names
+        if arm == "right":
+            return self.arm_joint_names
 
     def arm_get_ee_pose(self, arm):
         ee_pose_req = EePoseRequest()
@@ -302,12 +318,20 @@ class HuskyUR5ROS(object):
         """
         Arm to the home position
         """
-
-        return NotImplementedError
+        if arm == "left":
+            self.arm_set_joint_positions(self.arm_joint_home_l)
+        if arm == "right":
+            self.arm_set_joint_positions(self.arm_joint_home_r)
     
     def arm_move_to_neutral(self, arm):
 
         return NotImplementedError
+
+    def arm_go_prepare(self, arm):
+        if arm == "left":
+            self.arm_set_joint_positions(self.arm_joint_prepare_l)
+        if arm == "right":
+            self.arm_set_joint_positions(self.arm_joint_prepare_r)
 
     def arm_callback_joint_states(self, msg):
         """

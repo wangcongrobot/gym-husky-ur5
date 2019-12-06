@@ -20,7 +20,7 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
         self, model_path, n_substeps, gripper_extra_height, block_gripper,
         has_object, target_in_the_air, target_offset, obj_range, target_range,
         distance_threshold, initial_qpos, reward_type, n_actions,
-        use_real_robot, debug_print
+        use_real_robot, debug_print, use_arm
     ):
         """Initializes a new Dual_UR5_Husky environment.
 
@@ -86,11 +86,14 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
 
         self.debug_print = debug_print
 
-        # rospy.init_node("gym")
+        # For Real Robot
         self._use_real_robot = use_real_robot
         if self._use_real_robot:
-            self.husky_ur5_robot = husky_ur_ros.HuskyUR5ROS(debug_print=self.debug_print)
-            self.use_arm = 'left'
+            self.husky_ur5_robot = husky_ur_ros.HuskyUR5ROS(debug_print=debug_print, use_arm=use_arm)
+            self.use_arm = use_arm
+
+        # TODO: use one parameter to choose which arm, simplify the code
+        # self.arm_joint_names
 
         super(MobileDualUR5HuskyGymEnv, self).__init__(
             model_path=model_path, n_substeps=n_substeps, n_actions=self.n_actions,
@@ -99,213 +102,12 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
     # GoalEnv methods
     # ----------------------------
 
-    def compute_reward_old(self, achieved_goal, goal, info):
-        # Compute distance between goal and the achieved goal.
-        d = goal_distance(achieved_goal, goal)
-        if self.reward_type == 'sparse':
-            return -(d > self.distance_threshold).astype(np.float32)
-        else:
-            return -d
-
-    def compute_reward1(self, action, goal):
-        # control_mult = 0.1
-        # r_control = (1 - np.tanh(np.square(action).sum())) * control_mult
-        r_control = -0.01 * np.square(action).sum()
-        print("r_control: ", r_control)
-
-        staged_reward = self.staged_reward(action, goal)
-        # print("staged_reward: ", staged_reward)
-        reward = r_control + staged_reward
-        done = False
-        object_pos = self.sim.data.get_site_xpos('object0')
-        # if object_pos[2] < 0.05:
-            # done = True
-        print("total reward: ", reward)
-        return reward, done
-
     def compute_reward(self, action, goal):
         # return 0, 0
         return self.reward_pick(action, goal)
         # return self.reward_place(action, goal)
         # return self.staged_reward_simple(action, goal)
         # return self.staged_reward_standford(action, goal)
-
-    def staged_reward_simple(self, action, goal):
-        """
-        Returns staged rewards based on current physical states.
-        Stages consist of reaching, grasping, lifting, and hovering.
-        """
-        object_pos = self.sim.data.get_site_xpos('object0')
-        grip_pos = self.sim.data.get_site_xpos('r_grip_site')
-        grip_obj_pos = object_pos - grip_pos
-        obj_target_pos = goal - object_pos
-        
-        reach_mult = 0.1
-        grasp_mult = 0.35
-        lift_mult = 0.5
-        hover_mult = 0.7
-        target_mult = 0.9
-        reward = 0.
-
-        ### reaching reward governed by distance to closest object ###
-        r_reach = 0
-        # get reaching reward via minimum distance to a target object
-        dist = np.linalg.norm(grip_obj_pos)
-        # r_reach = (1 - np.tanh(1.0 * dist)) * reach_mult
-        r_reach = - dist * reach_mult
-
-        ### grasping reward for touching any objects of interest ###
-        r_grasp = 0.
-        # touch_left_finger = False
-        # touch_right_finger = False
-        # touch_object = False
-        # if np.linalg.norm(grip_obj_pos) < 0.05:
-            # touch_object = True
-        
-        if object_pos[2] > (0.4 + 0.025 + 0.05):
-            r_grasp = grasp_mult
-
-        ### lifting reward for picking up an object ###
-        r_lift = 0.
-        # if r_grasp > 0.:
-            # object_pos[2] > (0.4 + 0.025 + 0.05)
-            # r_lift = lift_mult
-            # z_dist = 0.5 - object_pos[2]
-            # r_lift = grasp_mult + (1 - np.tanh(z_dist)) * (lift_mult - grasp_mult)
-
-        ### hover reward for getting object to target ###
-        r_hover = 0.
-        # if r_lift > 0.:
-        #     dist_hover = np.linalg.norm(obj_target_pos)
-        #     r_hover = grasp_mult + (1 - np.tanh(dist_hover)) * (hover_mult - grasp_mult)
-        
-        if r_grasp > 0.: 
-            dist_hover = np.linalg.norm(obj_target_pos)
-            r_hover = grasp_mult + (1 - np.tanh(dist_hover)) * (hover_mult - grasp_mult)
-
-        ### target ###
-        r_target = 0.
-        # if r_hover > 0.:
-        dist_target = np.linalg.norm(obj_target_pos)
-        if dist_target < 0.05:
-            r_target = target_mult
-
-        if r_grasp > 0.:
-            reward = r_hover + r_target
-        else:
-            reward = r_reach + r_grasp
-        # staged_reward = r_reach + r_grasp + r_hover + r_target
-        if self.debug_print:
-            print("reward_reach: ", r_reach)
-            print("reward_grasp: ", r_grasp)
-            print("reward_hover: ", r_hover)
-            print("reward_target: ", r_target)
-
-        done = False
-        if object_pos[2] < 0.2:
-            done = True
-        return reward, done
-        # return r_reach, r_grasp, r_lift, r_hover, r_target
-
-    def staged_reward_standford(self, action, goal):
-        """
-        Returns staged rewards based on current physical states.
-        Stages consist of reaching, grasping, lifting, and hovering.
-        """
-        object_pos = self.sim.data.get_site_xpos('object0')
-        grip_pos = self.sim.data.get_site_xpos('r_grip_site')
-        grip_obj_pos = object_pos - grip_pos
-        obj_target_pos = goal - object_pos
-        
-        control_mult = 0.1
-        reach_mult = 0.1
-        grasp_mult = 0.5
-        lift_mult = 0.35
-        hover_mult = 0.7
-        target_mult = 0.9
-        reward = 0.
-
-        ### control action ###
-        action_sum = np.square(action).sum()
-        r_ctrl = (1 - np.tanh(0.5 * action_sum)) * control_mult
-
-        ### reaching reward governed by distance to closest object ###
-        r_reach = 0
-        # get reaching reward via minimum distance to a target object
-        dist = np.linalg.norm(grip_obj_pos)
-        r_reach = (1 - np.tanh(1.0 * dist)) * reach_mult
-        # r_reach = - dist * reach_mult
-
-        ### grasping reward for touching any objects of interest ###
-        # r_grasp = 0.
-        # touch_left_finger = False
-        # touch_right_finger = False
-        # touch_object = False
-        # if np.linalg.norm(grip_obj_pos) < 0.05:
-            # r_grasp = grasp_mult
-            # touch_object = True
-        # if object_pos[2] > (0.4 + 0.025 + 0.05):
-            # r_grasp = grasp_mult
-
-        ### lifting reward for picking up an object ###
-        r_lift = 0.
-        # if r_grasp > 0. and np.linalg.norm(grip_obj_pos) < 0.04:
-            # object_pos[2] > (0.4 + 0.025 + 0.05)
-            # r_lift = lift_mult
-        if np.linalg.norm(grip_obj_pos) < 0.05:
-            z_dist = 0.5 - object_pos[2]    
-            if self.debug_print:
-                print("object_pos_z: ", object_pos[2])
-                print("z_dist: ", z_dist)
-            # r_lift = reach_mult + (1 - np.tanh(1.0 * np.linalg.norm(z_dist))) * (lift_mult - reach_mult)
-
-        # r_lift = 0.
-        # if object_pos[2] > (0.4 + 0.025 + 0.05):
-            # r_lift = lift_mult
-
-        r_grasp = 0.
-        if object_pos[2] > (0.4 + 0.025 + 0.05):
-            r_grasp = grasp_mult
-
-        ### hover reward for getting object to target ###
-        r_hover = 0.
-        if r_grasp > 0.:
-            dist_hover = np.linalg.norm(obj_target_pos)
-            if self.debug_print:
-                print("dist_hover: ", dist_hover)
-            r_hover = grasp_mult + (1 - np.tanh(1.0 * dist_hover)) * (hover_mult - grasp_mult)
-
-        ### target ###
-        r_target = 0.
-        # if r_hover > 0.:
-        dist_target = np.linalg.norm(obj_target_pos)
-        if dist_target < 0.1:
-            r_target = target_mult
-            if dist_target < 0.05:
-                r_target += target_mult
-                if dist_target < 0.01:
-                    r_target += target_mult
-
-        staged_reward = [r_reach, r_grasp, r_lift, r_hover, r_target]
-        # staged_reward = [r_reach, r_grasp, r_lift]
-        
-        reward = r_ctrl + max(staged_reward)
-        
-        if self.debug_print:
-            print("reward_control: ", r_ctrl)
-            print("reward_reach: ", r_reach)
-            print("reward_lift: ", r_lift)
-            print("reward_grasp: ", r_grasp)
-            print("reward_hover: ", r_hover)
-            print("reward_target: ", r_target)
-            print("staged_reward: ", staged_reward)
-            print("total reward: ", reward)
-        done = False
-        if object_pos[2] < 0.2:
-            done = True
-        
-        return reward, done
-        # return r_reach, r_grasp, r_lift, r_hover, r_target
 
     def reward_pick(self, action, goal):
         """
@@ -450,37 +252,6 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
             # self.sim.data.set_joint_qpos('robot0:r_gripper_finger_joint', 0.)
             self.sim.forward()
 
-    def _set_action1(self, action):
-        assert action.shape == (self.n_actions,) # 6 mobile base
-        action = action.copy()  # ensure that we don't change the action outside of this scope
-        if self.debug_print:
-            print("_set_action:", action)
-        pos_ctrl, base_ctrl, gripper_ctrl = action[:3], action[3:-1], action[-1]
-        # pos_ctrl, gripper_ctrl = action[:3], action[3:]
-
-        pos_ctrl *= 0.03  # limit maximum change in position
-        base_ctrl *= 0.01
-
-        rot_ctrl = [0, 0.707, 0.707, 0] # fixed rotation of the end effector, expressed as a quaternion
-
-        if self.gripper_close:
-            gripper_ctrl = -1.0
-        else:
-            gripper_ctrl = 1.0
-        # gripper_ctrl = self.gripper_format_action(gripper_ctrl)
-        # assert gripper_ctrl.shape == (2,)
-        # assert gripper_ctrl.shape == (self.gripper_actual_dof,)
-        if self.block_gripper:
-            gripper_ctrl = np.zeros_like(gripper_ctrl)
-        action = np.concatenate([pos_ctrl, rot_ctrl, base_ctrl, gripper_ctrl])
-        # action = np.concatenate([pos_ctrl, rot_ctrl, gripper_ctrl])
-
-        # Apply action to simulation.
-        # utils.ctrl_set_action(self.sim, action) # base control + gripper control
-        # utils.mocap_set_action(self.sim, action) # arm control in cartesion (x, y, z)
-        self.set_trajectory_ee(action)
-        utils_gripper.gripper_control(action)
-
     def _set_action(self, action):
         if self._use_real_robot:
   
@@ -490,7 +261,7 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
                 print("_set_action:", action)
             pos_ctrl, base_ctrl, gripper_ctrl = action[:3], action[3:-1], action[-1]
 
-            pos_ctrl *= 0.03  # limit maximum change in position
+            pos_ctrl *= 0.05  # limit maximum change in position
             base_ctrl *= 0.01
 
             rot_ctrl = [0, 0.707, 0.707, 0] # fixed rotation of the end effector, expressed as a quaternion
@@ -505,17 +276,19 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
             # action = np.concatenate([pos_ctrl, rot_ctrl, base_ctrl, gripper_ctrl])
 
             ee_pose = self.husky_ur5_robot.arm_get_ee_pose(self.use_arm)
-            arm_action = [ee_pose.pose.position.x + pos_ctrl[0], 
-                          ee_pose.pose.position.y + pos_ctrl[1], 
-                          ee_pose.pose.position.z + pos_ctrl[2],
-                          ee_pose.pose.orientation.w,
-                          ee_pose.pose.orientation.x,
-                          ee_pose.pose.orientation.y,
-                          ee_pose.pose.orientation.z]
+            # arm_action = [ee_pose.pose.position.x + pos_ctrl[0], 
+            #               ee_pose.pose.position.y + pos_ctrl[1], 
+            #               ee_pose.pose.position.z + pos_ctrl[2],
+            #               ee_pose.pose.orientation.w,
+            #               ee_pose.pose.orientation.x,
+            #               ee_pose.pose.orientation.y,
+            #               ee_pose.pose.orientation.z]
+            arm_action = pos_ctrl
+            print("arm_action: ", arm_action)
 
             # Applay action to real robot
             # self.husky_ur5_robot.arm_set_ee_pose_relative(pos_ctrl)
-            self.husky_ur5_robot.arm_set_ee_pose(arm_action)
+            self.husky_ur5_robot.arm_set_ee_pose_relative(arm_action)
             self.husky_ur5_robot.base_velocity_cmd(base_ctrl)
             # self.husky_ur5_robot.base_go_to_relative(base_ctrl)
             if self.gripper_close:
@@ -593,7 +366,7 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
             if self.use_arm == 'right':
                 joint_names_dict = self.husky_ur5_robot.arm_get_joint_angles(self.use_arm)
                 joint_velocity_dict = self.husky_ur5_robot.arm_get_joint_velocity(self.use_arm)
-                for i in self.left_arm_joint_names:
+                for i in self.right_arm_joint_names:
                     joint_angles.append(joint_names_dict[i])
                     joint_velocity.append(joint_velocity_dict[i])
                 ee_pose = self.husky_ur5_robot.arm_get_ee_pose(self.use_arm)
@@ -835,14 +608,3 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
         """
         movement = np.array([1, 1, 1, 0])
         return -1 * movement * action
-
-    def gripper_format_action11(self, action):
-        """ Given (-1,1) abstract control as np-array return the (-1,1) control signals
-        for underlying actuators as 1-d np array
-        Args:
-            action: 1 => open, -1 => closed
-        """
-        movement = np.array([0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1])
-        return -1 * movement * action
-
-    

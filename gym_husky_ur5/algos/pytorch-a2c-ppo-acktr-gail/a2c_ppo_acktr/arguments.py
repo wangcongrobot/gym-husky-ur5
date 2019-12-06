@@ -120,7 +120,7 @@ def get_args():
         help='number of environment steps to train (default: 10e6)')
     parser.add_argument(
         '--env-name',
-        default='MobileDualUR5HuskyPickAndPlace-v1',
+        default='MobileDualUR5HuskyPickAndPlaceGym-v1',
         help='environment to train on (default: PongNoFrameskip-v4)')
     parser.add_argument(
         '--log-dir',
