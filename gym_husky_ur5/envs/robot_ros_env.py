@@ -18,7 +18,7 @@ from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry
 from husky_train.srv import EePose, EePoseRequest, EeRpy, EeRpyRequest, EeTraj, EeTrajRequest, JointTraj, JointTrajRequest
 
-from robotiq_msg.msg import SModelRobotOutput
+from robotiq_s_model_articulated_msgs.msg import SModelRobotOutput
 from geometry_msgs.msg import Pose
 
 from collections import OrderedDict

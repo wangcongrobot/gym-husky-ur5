@@ -23,8 +23,8 @@ parser.add_argument(
     help='log interval, one log per n updates (default: 10)')
 parser.add_argument(
     '--env-name',
-    default='MobileDualUR5HuskyPickAndPlace-v1',
-    help='environment to train on (default: MobileDualUR5HuskyPickAndPlace-v1)')
+    default='MobileDualUR5HuskyPickAndPlaceGym-v1',
+    help='environment to train on (default: MobileDualUR5HuskyPickAndPlaceGym-v1)')
 parser.add_argument(
     '--load-dir',
     default='./trained_models/ppo',

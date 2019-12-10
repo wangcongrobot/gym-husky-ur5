@@ -9,7 +9,7 @@ This serves as an example for publishing messages on the 'SModelRobotOutput' top
 import roslib; 
 # roslib.load_manifest('robotiq_s_model_control')
 import rospy
-from robotiq_msg.msg import SModelRobotOutput 
+from robotiq_s_model_articulated_msgs.msg import SModelRobotOutput 
 from time import sleep
 
 

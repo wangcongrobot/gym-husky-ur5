@@ -19,10 +19,13 @@ def test_arm():
                     -0.086, 
                     0.5, 
                     -2.0]
-    husky_ur_ros.arm_set_joint_positions(joint_target)
+    # husky_ur_ros.arm_set_joint_positions(joint_target)
 
     ee_pose = husky_ur_ros.arm_get_ee_pose('left')
     print(ee_pose)
+    action = [0.02,0.02,0.02]
+    husky_ur_ros.arm_set_ee_pose_relative(action)
+    return 0
     '''
     pose: 
   position: 
@@ -66,6 +69,6 @@ def test_camera():
 
 
 if __name__ == "__main__":
-    # test_arm()
+    test_arm()
     # test_gripper()
-    test_base()
+    # test_base()
