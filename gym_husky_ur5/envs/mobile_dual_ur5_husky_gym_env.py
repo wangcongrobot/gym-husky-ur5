@@ -86,6 +86,8 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
 
         self.debug_print = debug_print
 
+        self._is_success = 0
+
         # rospy.init_node("gym")
         self._use_real_robot = use_real_robot
         if self._use_real_robot:
@@ -328,7 +330,7 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
         reward_dist_target = 0
         reward_target = 0
         reward = 0
-        _is_success = False
+        self._is_success = 0
 
         reward_ctrl = -np.square(action).sum()
 
@@ -355,7 +357,7 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
                     reward_grasping += 10.0
                     if object_pos[2] > 0.5:
                         reward_grasping += 100.0
-                        _is_success = True
+                        self._is_success = 1
                         # if object_pos[2] > 0.5:
                             # reward_grasping += 10.0
         reward = 0.01 * reward_ctrl + reward_dist_object + reward_grasping
@@ -381,7 +383,7 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
             # done = True
             reward -= 10
         info = {
-            'is_success': _is_success,
+            'is_success': self._is_success,
         }
         return reward, done, info
 
@@ -621,7 +623,8 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
                 object_pos,
                 object_rel_pos,
                 ur5_qpos,
-                ur5_qvel
+                ur5_qvel,
+                [self._is_success],
             ])
             if self.debug_print:
                 print("observation: ", obs)
@@ -674,6 +677,7 @@ class MobileDualUR5HuskyGymEnv(robot_gym_env.RobotGymEnv):
                 # object_velr.ravel(), 
                 # grip_velp, 
                 # gripper_vel,
+                [self._is_success],
             ])
 
             return obs
